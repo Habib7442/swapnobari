@@ -152,11 +152,12 @@ You do not design. You implement `DESIGN.md` and the reference images the user p
 - Reuse `components/ui/*` and existing patterns before adding new components. Add shadcn components with `npx shadcn@latest add <name>`, then restyle them to the tokens.
 - Colour rules: **orange** = the main action only; **navy** = structure; **green = WhatsApp only**, never any other button. Status pills use `DESIGN.md` §3.4.
 - Design tokens live in `app/globals.css` (`:root` variables + Tailwind v4 `@theme`). There is no `tailwind.config` file. Map shadcn variables (`--primary`, `--ring`, etc.) to Swapnobari tokens; do not hardcode hex values in components.
-- Fonts: Poppins (headings), Inter (body), Playfair Display (Sanskar title only) via `next/font/google`.
+- Fonts (via `next/font/google`): **Fraunces 600** (`font-display`) for the hero H1 only; **Inter** for everything else, including H2/H3. Playfair Display may be added later for the Sanskar title only.
+- Content container: `max-w-[1440px] mx-auto px-5 md:px-8 xl:px-12` (20 / 32 / 48 px). Header and every section align to it; hero backgrounds are full-bleed.
 - Icons: Lucide line icons only. Never use emoji in the interface.
 - Money: `₹` with Indian grouping (`₹12,50,000` or `₹12.5 lakh`). Use `Intl.NumberFormat('en-IN')`.
 - Mobile number fields: fixed `+91` prefix, `inputMode="numeric"`, 10-digit validation.
-- Mobile layout: sticky bottom bar (Call | WhatsApp | Get Estimate) and no floating WhatsApp button. Desktop: floating WhatsApp button.
+- Mobile layout: **no sticky bottom bar** (the client rejected it). Hero CTAs carry the actions; the mobile drawer has Call and WhatsApp.
 - Forms open as a centred modal on desktop and a bottom sheet on mobile. Success replaces the form with a thank-you panel and a WhatsApp button.
 - Accessibility: every input labelled, errors announced with `aria-live`, icon-only buttons have `aria-label`, visible focus ring, Esc closes modals, respect `prefers-reduced-motion`.
 - Images: `next/image`, WebP, lazy below the fold, meaningful `alt`.
@@ -299,8 +300,11 @@ Canonical list in `.env.example` (keep in sync). Only `NEXT_PUBLIC_*` may reach 
 | `LEAD_ALERT_EMAIL` | where alerts go | server only |
 | `NEXT_PUBLIC_SITE_URL` | canonical URL, sitemap, OG | client + server |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 | client + server |
+| `GOOGLE_SITE_VERIFICATION` | Optional Search Console meta-tag code (DNS TXT in Cloudflare is preferred) | server only |
+| `VERCEL_ENV` | Set by Vercel. `robots.txt` allows crawling only when it is `production` | server only |
+| `WHATSAPP_NUMBER` | Swapnobari WhatsApp number (10 digits; `91` added in `lib/env.ts`). Read on the server, passed down as a prop | server only |
 
-Phone, WhatsApp number, email and address live in `site_settings`, not env vars.
+Phone, email and address will live in `site_settings`. Until the admin panel exists, the WhatsApp number comes from `WHATSAPP_NUMBER`; message templates live in `lib/whatsapp.ts` (`WHATSAPP_TEMPLATES`). Never hardcode a number or message in a component.
 
 ---
 
@@ -354,6 +358,8 @@ Use clearly marked placeholder content until answered; never invent prices, rate
 ---
 
 ## 15. Common traps
+
+- SEO lives in `lib/seo.ts` (`publicRoutes`, `pageMetadata()`) and `lib/jsonld.ts`. Every new public page exports `metadata = pageMetadata(path)` and sets `live: true` on its `publicRoutes` entry so it enters the sitemap. Never publish placeholder data in JSON-LD.
 
 - `middleware.ts` → `proxy.ts` in Next.js 16. Proxy is only an optimistic gate, not authorisation.
 - With `cacheComponents` on, a cached function must not read cookies/headers; admin and lead data must never be cached.
