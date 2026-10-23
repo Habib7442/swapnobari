@@ -141,7 +141,7 @@ const advisorPoints = [
 function AdvisorSection({ locations }: { locations: LocationOptions }) {
   return (
     <section id="advisor" aria-labelledby="advisor-title" className="scroll-mt-20 bg-navy-50 py-14 lg:py-20">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-5 md:px-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center xl:px-12">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)] gap-10 px-5 md:px-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center xl:px-12">
         <div>
           <h2 id="advisor-title" className="text-[26px] font-bold text-navy-700 sm:text-[32px]">
             Talk to an advisor

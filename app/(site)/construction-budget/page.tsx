@@ -41,7 +41,7 @@ export default async function ConstructionBudgetPage() {
       />
 
       <section aria-labelledby="budget-page-title" className="bg-cream-light">
-        <div className="mx-auto grid max-w-[1440px] gap-8 px-5 pt-[100px] pb-14 md:px-8 md:pt-[124px] md:pb-20 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-16 xl:px-12">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)] gap-8 px-5 pt-[100px] pb-14 md:px-8 md:pt-[124px] md:pb-20 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-16 xl:px-12">
           <div className="max-w-[600px] animate-fade-up">
             <p className="inline-flex items-center gap-2 rounded-full border border-navy-700/[0.08] bg-white px-3.5 py-2 text-[13px] font-medium text-navy-700">
               <span aria-hidden="true" className="size-1.5 rounded-full bg-orange-500" />

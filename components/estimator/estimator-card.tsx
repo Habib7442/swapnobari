@@ -71,7 +71,7 @@ export function EstimatorCard({
               label="Number of floors"
               icon={Layers}
               error={errors.floors}
-              trailing={<ChevronDown aria-hidden="true" className="mr-2 size-4 text-slate-400" />}
+              trailing={<ChevronDown aria-hidden="true" className="size-4 text-slate-400" />}
             >
               {(props) => (
                 <select
@@ -79,7 +79,7 @@ export function EstimatorCard({
                   name="floors"
                   value={floors}
                   onChange={(e) => setFloors(e.target.value)}
-                  className={cn(props.className, "appearance-none pr-9", !floors && "text-slate-500")}
+                  className={cn(props.className, "appearance-none pr-7", !floors && "text-slate-500")}
                 >
                   <option value="" disabled>
                     Floors
