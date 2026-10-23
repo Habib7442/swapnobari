@@ -1,12 +1,17 @@
 import "server-only"
 
 /**
- * Verifies a Cloudflare Turnstile token. If TURNSTILE_SECRET_KEY is not set, verification is
- * skipped with a warning (so leads are never lost to a missing config); set it in production.
+ * Verifies a Cloudflare Turnstile token. If TURNSTILE_SECRET_KEY is not set, production rejects
+ * every submission; development skips the check with a warning.
  */
 export async function verifyTurnstile(token: string | undefined, ip: string | null): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY
   if (!secret) {
+    // Fail closed in production: Turnstile is required on every public form (AGENTS.md §11).
+    if (process.env.NODE_ENV === "production") {
+      console.error("[turnstile] TURNSTILE_SECRET_KEY not set: rejecting submission")
+      return false
+    }
     console.warn("[turnstile] TURNSTILE_SECRET_KEY not set: skipping bot check")
     return true
   }

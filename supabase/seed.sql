@@ -88,8 +88,9 @@ insert into public.budget_packages (slug, name, tagline, sort) values
 on conflict (slug) do update set name = excluded.name, tagline = excluded.tagline, sort = excluded.sort;
 
 -- Typical residential split, for the client to confirm before launch. Must total 100.
-delete from public.budget_stages;
-insert into public.budget_stages (name, percent, ground_floor_only, sort) values
+-- Seeded only into an empty table, so re-running never overwrites the client's edits.
+insert into public.budget_stages (name, percent, ground_floor_only, sort)
+select * from (values
   ('Design & approvals',        3, false,  1),
   ('Excavation & foundation',  12, true,   2),
   ('RCC structure',            25, false,  3),
@@ -99,7 +100,9 @@ insert into public.budget_stages (name, percent, ground_floor_only, sort) values
   ('Plumbing & sanitary',       7, false,  7),
   ('Doors & windows',           8, false,  8),
   ('Painting & finishing',      8, false,  9),
-  ('Contingency & misc.',       6, false, 10);
+  ('Contingency & misc.',       6, false, 10)
+) as v(name, percent, ground_floor_only, sort)
+where not exists (select 1 from public.budget_stages);
 
 insert into public.site_settings (key, value, is_public) values
   ('estimate_range_percent', '10', true),

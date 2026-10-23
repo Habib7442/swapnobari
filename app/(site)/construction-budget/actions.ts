@@ -20,6 +20,8 @@ export type FormState = {
 
 const BOT_CHECK_FAILED = "We couldn't verify you're human. Please refresh the page and try again."
 const TOO_MANY = "Too many requests from your network. Please wait a few minutes or WhatsApp us."
+// With 0–1 cities the city is a hidden input, so its field error has nowhere to show.
+const CITY_NOT_LOADED = "We couldn't load your city. Please refresh the page and try again."
 
 function fields(formData: FormData): Record<string, string> {
   const out: Record<string, string> = {}
@@ -54,7 +56,10 @@ function resolveLocation(data: EstimatorData, cityId: string, areaId: string | u
 
 export async function submitEstimate(_prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = estimateSchema.safeParse(fields(formData))
-  if (!parsed.success) return { status: "error", fieldErrors: toFieldErrors(parsed.error) }
+  if (!parsed.success) {
+    const fieldErrors = toFieldErrors(parsed.error)
+    return { status: "error", fieldErrors, ...(fieldErrors.cityId && { message: CITY_NOT_LOADED }) }
+  }
   const input = parsed.data
 
   let resultPath: string
@@ -65,7 +70,9 @@ export async function submitEstimate(_prev: FormState, formData: FormData): Prom
 
     const data = await getEstimatorData()
     const location = resolveLocation(data, input.cityId, input.areaId, input.areaOther)
-    if (!location.city) return { status: "error", fieldErrors: { cityId: "Choose your city." } }
+    if (!location.city) {
+      return { status: "error", fieldErrors: { cityId: "Choose your city." }, message: CITY_NOT_LOADED }
+    }
 
     const rates = data.ratesByCity[location.city.id] ?? []
     const estimate =

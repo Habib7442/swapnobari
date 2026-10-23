@@ -37,21 +37,14 @@ const ICONS: Record<string, LucideIcon> = {
 
 type MobileNavProps = { items: NavItem[]; whatsappNumber: string }
 
-/** See NavLinks: the active highlight streams in behind <Suspense> on dynamic routes. */
-export function MobileNav(props: MobileNavProps) {
-  return (
-    <Suspense fallback={<MobileNavView {...props} pathname="" />}>
-      <ActiveMobileNav {...props} />
-    </Suspense>
-  )
-}
-
-function ActiveMobileNav(props: MobileNavProps) {
-  return <MobileNavView {...props} pathname={usePathname()} />
-}
-
-function MobileNavView({ items, whatsappNumber, pathname }: MobileNavProps & { pathname: string }) {
+/**
+ * See NavLinks: the active highlight streams in behind <Suspense> on dynamic routes. Only the
+ * links suspend; the Sheet and its open state stay outside, so the menu stays open if the
+ * pathname resolves while a visitor is using it.
+ */
+export function MobileNav({ items, whatsappNumber }: MobileNavProps) {
   const [open, setOpen] = useState(false)
+  const close = (): void => setOpen(false)
   const links: NavItem[] = [{ label: "Home", href: "/" }, ...items]
 
   return (
@@ -84,49 +77,15 @@ function MobileNavView({ items, whatsappNumber, pathname }: MobileNavProps & { p
         <nav aria-label="Main" className="flex-1 overflow-y-auto px-3 pt-4 pb-2 [@media(max-height:760px)]:pt-2">
           <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-slate-500">MENU</p>
           <ul className="flex flex-col gap-1">
-            {links.map((item, index) => {
-              const active = pathname === item.href
-              const Icon = ICONS[item.href] ?? ChevronRight
-              return (
-                <li key={item.href} className="animate-fade-up" style={{ animationDelay: `${60 + index * 35}ms` }}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                      "group flex min-h-14 items-center gap-3.5 rounded-[14px] px-3 transition-colors [@media(max-height:760px)]:min-h-12",
-                      active ? "bg-orange-50" : "hover:bg-cream-light active:bg-cream-light"
-                    )}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        "inline-flex size-10 shrink-0 items-center justify-center rounded-[10px] transition-colors [@media(max-height:760px)]:size-9",
-                        active ? "bg-orange-500 text-white" : "bg-cream-light text-navy-700 group-hover:bg-white"
-                      )}
-                    >
-                      <Icon className="size-[19px]" strokeWidth={1.75} />
-                    </span>
-                    <span className={cn("flex-1 text-[16px] font-medium", active ? "text-orange-600" : "text-navy-700")}>
-                      {item.label}
-                    </span>
-                    <ChevronRight
-                      aria-hidden="true"
-                      className={cn(
-                        "size-[18px] transition-transform duration-150 group-hover:translate-x-0.5",
-                        active ? "text-orange-500" : "text-slate-400"
-                      )}
-                    />
-                  </Link>
-                </li>
-              )
-            })}
+            <Suspense fallback={<MenuLinks links={links} pathname="" onNavigate={close} />}>
+              <ActiveMenuLinks links={links} onNavigate={close} />
+            </Suspense>
           </ul>
 
           {/* Estimate promo */}
           <Link
             href="/construction-budget"
-            onClick={() => setOpen(false)}
+            onClick={close}
             className="group relative mx-1 mt-5 block animate-fade-up [@media(max-height:760px)]:mt-3 overflow-hidden rounded-[16px] bg-navy-700 p-4 text-white [animation-delay:320ms]"
           >
             <span aria-hidden="true" className="absolute -top-10 -right-10 size-32 rounded-full bg-white/[0.06]" />
@@ -169,4 +128,50 @@ function MobileNavView({ items, whatsappNumber, pathname }: MobileNavProps & { p
       </SheetContent>
     </Sheet>
   )
+}
+
+type MenuLinksProps = { links: NavItem[]; onNavigate: () => void }
+
+function ActiveMenuLinks(props: MenuLinksProps) {
+  return <MenuLinks {...props} pathname={usePathname()} />
+}
+
+function MenuLinks({ links, onNavigate, pathname }: MenuLinksProps & { pathname: string }) {
+  return links.map((item, index) => {
+    const active = pathname === item.href
+    const Icon = ICONS[item.href] ?? ChevronRight
+    return (
+      <li key={item.href} className="animate-fade-up" style={{ animationDelay: `${60 + index * 35}ms` }}>
+        <Link
+          href={item.href}
+          onClick={onNavigate}
+          aria-current={active ? "page" : undefined}
+          className={cn(
+            "group flex min-h-14 items-center gap-3.5 rounded-[14px] px-3 transition-colors [@media(max-height:760px)]:min-h-12",
+            active ? "bg-orange-50" : "hover:bg-cream-light active:bg-cream-light"
+          )}
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              "inline-flex size-10 shrink-0 items-center justify-center rounded-[10px] transition-colors [@media(max-height:760px)]:size-9",
+              active ? "bg-orange-500 text-white" : "bg-cream-light text-navy-700 group-hover:bg-white"
+            )}
+          >
+            <Icon className="size-[19px]" strokeWidth={1.75} />
+          </span>
+          <span className={cn("flex-1 text-[16px] font-medium", active ? "text-orange-600" : "text-navy-700")}>
+            {item.label}
+          </span>
+          <ChevronRight
+            aria-hidden="true"
+            className={cn(
+              "size-[18px] transition-transform duration-150 group-hover:translate-x-0.5",
+              active ? "text-orange-500" : "text-slate-400"
+            )}
+          />
+        </Link>
+      </li>
+    )
+  })
 }

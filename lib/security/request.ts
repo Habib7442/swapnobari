@@ -14,9 +14,13 @@ export async function getRequestInfo(): Promise<RequestInfo> {
   const ip =
     h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip")?.trim() || null
   const salt = process.env.IP_HASH_SALT
-  if (!salt) console.warn("[request] IP_HASH_SALT not set: using a fallback salt")
+  // A public fallback salt would make IPv4 hashes reversible, so production must set its own.
+  if (!salt && process.env.NODE_ENV === "production") {
+    throw new Error("IP_HASH_SALT must be set in production.")
+  }
+  if (!salt) console.warn("[request] IP_HASH_SALT not set: using a development-only fallback salt")
   const ipHash = ip
-    ? createHash("sha256").update(`${salt ?? "swapnobari-fallback-salt"}:${ip}`).digest("hex")
+    ? createHash("sha256").update(`${salt ?? "swapnobari-dev-only-salt"}:${ip}`).digest("hex")
     : null
 
   return { ip, ipHash, device: deviceFromUserAgent(h.get("user-agent") ?? "") }

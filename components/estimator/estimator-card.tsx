@@ -8,6 +8,7 @@ import { LocationFields, type LocationOptions } from "@/components/estimator/loc
 import { TrackingFields } from "@/components/estimator/tracking-fields"
 import { Turnstile } from "@/components/estimator/turnstile"
 import { ESTIMATOR } from "@/lib/constants"
+import { sanitizeMobileInput } from "@/lib/domain/phone"
 import { cn } from "@/lib/utils"
 
 const initialState: FormState = { status: "idle" }
@@ -119,7 +120,7 @@ export function EstimatorCard({
                 autoComplete="tel-national"
                 placeholder="Mobile / WhatsApp"
                 value={mobile}
-                onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                onChange={(e) => setMobile(sanitizeMobileInput(e.target.value))}
               />
             )}
           </Field>

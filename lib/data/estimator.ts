@@ -42,8 +42,8 @@ const EMPTY: EstimatorData = {
 
 export async function getEstimatorData(): Promise<EstimatorData> {
   "use cache"
-  cacheLife("minutes")
   cacheTag(ESTIMATOR_CACHE_TAG)
+  // One cacheLife per invocation (Next.js docs): "minutes" on success, "seconds" on failure.
 
   try {
     const supabase = createPublicClient()
@@ -88,6 +88,7 @@ export async function getEstimatorData(): Promise<EstimatorData> {
     const range = Number(setting("estimate_range_percent"))
     const disclaimer = setting("estimate_disclaimer")
 
+    cacheLife("minutes")
     return {
       cities: (cities.data ?? []).map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
       areas: (areas.data ?? []).map((a) => ({ id: a.id, cityId: a.city_id, name: a.name })),
@@ -107,6 +108,11 @@ export async function getEstimatorData(): Promise<EstimatorData> {
     }
   } catch (error) {
     console.error("[estimator] failed to load reference data", error)
+    // Retry soon, so a brief outage or a build without config isn't served for the full window.
+    // Not the "seconds" preset: that makes the data a request-time hole, and callers read it
+    // outside <Suspense>, so prerendering would fail. stale >= 30s and expire >= 5min keep it
+    // prerenderable (cacheLife docs, "Prerendering behavior").
+    cacheLife({ stale: 30, revalidate: 10, expire: 300 })
     return EMPTY
   }
 }

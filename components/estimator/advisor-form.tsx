@@ -7,6 +7,7 @@ import { ConsentCheckbox, Field } from "@/components/estimator/field"
 import { LocationFields, type LocationOptions } from "@/components/estimator/location-fields"
 import { TrackingFields } from "@/components/estimator/tracking-fields"
 import { Turnstile } from "@/components/estimator/turnstile"
+import { sanitizeMobileInput } from "@/lib/domain/phone"
 
 const initialState: FormState = { status: "idle" }
 
@@ -48,7 +49,7 @@ export function AdvisorForm({ locations }: { locations: LocationOptions }) {
               autoComplete="tel-national"
               placeholder="Mobile / WhatsApp"
               value={mobile}
-              onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              onChange={(e) => setMobile(sanitizeMobileInput(e.target.value))}
             />
           )}
         </Field>
