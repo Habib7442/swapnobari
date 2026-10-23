@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -35,9 +35,23 @@ const ICONS: Record<string, LucideIcon> = {
   "/contact": MessageSquareText,
 }
 
-export function MobileNav({ items, whatsappNumber }: { items: NavItem[]; whatsappNumber: string }) {
+type MobileNavProps = { items: NavItem[]; whatsappNumber: string }
+
+/** See NavLinks: the active highlight streams in behind <Suspense> on dynamic routes. */
+export function MobileNav(props: MobileNavProps) {
+  return (
+    <Suspense fallback={<MobileNavView {...props} pathname="" />}>
+      <ActiveMobileNav {...props} />
+    </Suspense>
+  )
+}
+
+function ActiveMobileNav(props: MobileNavProps) {
+  return <MobileNavView {...props} pathname={usePathname()} />
+}
+
+function MobileNavView({ items, whatsappNumber, pathname }: MobileNavProps & { pathname: string }) {
   const [open, setOpen] = useState(false)
-  const pathname = usePathname()
   const links: NavItem[] = [{ label: "Home", href: "/" }, ...items]
 
   return (

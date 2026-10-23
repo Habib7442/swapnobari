@@ -38,9 +38,9 @@ export const publicRoutes: PublicRoute[] = [
   },
   {
     path: "/construction-budget",
-    title: "House Construction Cost Estimate in Silchar",
+    title: "House Construction Cost Calculator in Silchar",
     description:
-      "Get a free, approximate construction cost for your house in Silchar. Share your plot size and floors and we'll send you an estimate range.",
+      "Free house construction cost calculator for Silchar. See an instant cost range for Basic, Standard and Premium packages with a stage-wise breakdown.",
     changeFrequency: "monthly",
     priority: 0.9,
     live: true,

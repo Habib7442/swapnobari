@@ -178,7 +178,7 @@ Keep these layers separate:
 | Data layer | `lib/data/*` (server-only) | All Supabase reads and writes, typed |
 | Domain logic | `lib/domain/*` | Pure functions: budget estimate, duplicate check, WhatsApp link builder, phone/money formatting |
 | Validation | `lib/validation/*` | Zod schemas shared by forms and server |
-| Supabase clients | `lib/supabase/{server,client,admin}.ts` | `admin.ts` (service role) is `import "server-only"` |
+| Supabase clients | `lib/supabase/{public,admin}.ts` (+ `server`/`client` with admin auth) | `public.ts` = publishable key for cached public reads; `admin.ts` = secret key, `import "server-only"` |
 | Notifications | `lib/notify/*` | Email lead alerts (Resend or Brevo) |
 | Request gate | `proxy.ts` | Optimistic redirect for `/admin` only. Real authorisation happens in the data layer and RLS |
 
@@ -266,7 +266,7 @@ Save rules:
 
 Never expose to browser code:
 
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY`
 - email provider API key
 - Turnstile secret key
 - any lead, dealer contact or user data to a non-authorised role
@@ -292,12 +292,14 @@ Canonical list in `.env.example` (keep in sync). Only `NEXT_PUBLIC_*` may reach 
 | Variable | Purpose | Exposure |
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | client + server |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key (RLS-limited) | client + server |
-| `SUPABASE_SERVICE_ROLE_KEY` | privileged server writes | server only |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable key `sb_publishable_…` (RLS-limited); used server-side for cached public reads | client + server |
+| `SUPABASE_SECRET_KEY` | Supabase secret key `sb_secret_…`; bypasses RLS; only in `lib/supabase/admin.ts` | server only |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile widget | client + server |
 | `TURNSTILE_SECRET_KEY` | Turnstile verification | server only |
 | `RESEND_API_KEY` (or Brevo) | lead alert email | server only |
-| `LEAD_ALERT_EMAIL` | where alerts go | server only |
+| `LEAD_ALERT_EMAIL` | where alerts go (comma-separated) | server only |
+| `LEAD_ALERT_FROM` | sender on a Resend-verified domain | server only |
+| `IP_HASH_SALT` | salt for hashing IPs (rate limiting); raw IPs are never stored | server only |
 | `NEXT_PUBLIC_SITE_URL` | canonical URL, sitemap, OG | client + server |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 | client + server |
 | `GOOGLE_SITE_VERIFICATION` | Optional Search Console meta-tag code (DNS TXT in Cloudflare is preferred) | server only |

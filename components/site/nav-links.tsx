@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { Suspense } from "react"
 import { usePathname } from "next/navigation"
 import { ChevronDown } from "lucide-react"
 import {
@@ -21,9 +22,26 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-/** Desktop nav: the first links inline, the rest under "More" (six links don't fit the 1080px container). */
-export function NavLinks({ items, more }: { items: NavItem[]; more: NavItem[] }) {
-  const pathname = usePathname()
+type NavLinksProps = { items: NavItem[]; more: NavItem[] }
+
+/**
+ * Desktop nav: the first links inline, the rest under "More".
+ * The current path is runtime data on dynamic routes, so the active-link version streams in
+ * behind <Suspense>; the fallback is the same menu without the highlight.
+ */
+export function NavLinks(props: NavLinksProps) {
+  return (
+    <Suspense fallback={<NavLinksView {...props} pathname="" />}>
+      <ActiveNavLinks {...props} />
+    </Suspense>
+  )
+}
+
+function ActiveNavLinks(props: NavLinksProps) {
+  return <NavLinksView {...props} pathname={usePathname()} />
+}
+
+function NavLinksView({ items, more, pathname }: NavLinksProps & { pathname: string }) {
   const moreActive = more.some((item) => isActive(pathname, item.href))
 
   return (

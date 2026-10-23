@@ -1,7 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, BadgeIndianRupee, Check, Compass, ShieldCheck, type LucideIcon } from "lucide-react"
-import { BudgetCard } from "@/components/home/budget-card"
+import { EstimatorCard } from "@/components/estimator/estimator-card"
+import { getEstimatorData } from "@/lib/data/estimator"
 import { WhatsAppIcon } from "@/components/icons/whatsapp"
 import { getWhatsAppNumber } from "@/lib/env"
 import { whatsappMessage, whatsappUrl } from "@/lib/whatsapp"
@@ -15,8 +16,9 @@ const trustIcons: Record<string, LucideIcon> = {
   "Verified sellers": ShieldCheck,
 }
 
-export function Hero() {
+export async function Hero() {
   const whatsappNumber = getWhatsAppNumber()
+  const { cities, areas } = await getEstimatorData()
 
   return (
     <section
@@ -146,7 +148,7 @@ export function Hero() {
           </ul>
         </div>
 
-        <BudgetCard whatsappNumber={whatsappNumber} className="hidden w-full animate-fade-up [animation-delay:520ms] md:block md:max-w-[560px] lg:w-[380px] lg:max-w-none" />
+        <EstimatorCard locations={{ cities, areas }} sourceButton="home_hero" className="hidden w-full animate-fade-up [animation-delay:520ms] md:block md:max-w-[560px] lg:w-[380px] lg:max-w-none" />
       </div>
 
       {/* <768px: keeps the house in view below the text. */}
