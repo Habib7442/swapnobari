@@ -7,15 +7,26 @@ export function normalizeIndianMobile(raw: string): string | null {
 }
 
 /**
- * For controlled mobile inputs: drop a pasted +91 / 0091 / 0 prefix, keep at most 10 digits.
- * Prefixes are stripped only at their exact lengths, so one extra typed digit on a number
- * that happens to start with 91 or 0 is truncated, not mistaken for a prefix.
+ * For controlled mobile inputs: drop a typed or pasted +91 / 0091 / 0 prefix.
+ * The input runs on every keystroke, so a prefix being typed is kept (capped at its full
+ * length) and stripped only once complete. A number starting 91 is ambiguous until then:
+ * 10 digits stay as a number, 12 lose the prefix, 11 stay and fail validation rather than
+ * being truncated into a wrong number.
  */
 export function sanitizeMobileInput(raw: string): string {
-  let digits = raw.replace(/\D/g, "")
-  if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4)
-  else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2)
-  else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1)
+  const digits = raw.replace(/\D/g, "")
+  if (digits.startsWith("00")) {
+    const capped = digits.slice(0, 14)
+    return capped.length === 14 && capped.startsWith("0091") ? capped.slice(4) : capped
+  }
+  if (digits.startsWith("0")) {
+    const capped = digits.slice(0, 11)
+    return capped.length === 11 ? capped.slice(1) : capped
+  }
+  if (digits.startsWith("91")) {
+    const capped = digits.slice(0, 12)
+    return capped.length === 12 ? capped.slice(2) : capped
+  }
   return digits.slice(0, 10)
 }
 
