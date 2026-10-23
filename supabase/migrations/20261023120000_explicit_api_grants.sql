@@ -28,6 +28,7 @@ grant select, insert, update, delete on
 to service_role;
 
 -- Leads are never hard-deleted (AGENTS.md §9), so no delete. anon/authenticated stay revoked.
+-- Pre-existing DELETE/TRUNCATE privileges are revoked in 20261023130000_revoke_lead_deletes.sql.
 grant select, insert, update on public.leads to service_role;
 -- The ref_code default calls nextval().
 grant usage, select on sequence public.lead_ref_seq to service_role;
