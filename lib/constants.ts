@@ -48,5 +48,14 @@ export const RATE_LIMIT = {
 
 export const DEFAULT_DUPLICATE_WINDOW_DAYS = 30
 
+/**
+ * Cache tags the admin app may refresh via POST /api/revalidate.
+ * Twin of PUBLIC_CACHE_TAGS in swapnobari-admin/lib/constants.ts: keep in sync.
+ */
+export const PUBLIC_CACHE_TAGS = {
+  estimator: "estimator",
+} as const
+export type PublicCacheTag = (typeof PUBLIC_CACHE_TAGS)[keyof typeof PUBLIC_CACHE_TAGS]
+
 /** Shown when the server fails (AGENTS.md §12). */
 export const GENERIC_ERROR = "Something went wrong. Please try again or WhatsApp us."

@@ -1,6 +1,6 @@
 import "server-only"
 import { cacheLife, cacheTag } from "next/cache"
-import { ESTIMATOR } from "@/lib/constants"
+import { ESTIMATOR, PUBLIC_CACHE_TAGS } from "@/lib/constants"
 import type { PackageRate, Stage } from "@/lib/domain/estimate"
 import { createPublicClient } from "@/lib/supabase/public"
 
@@ -10,7 +10,7 @@ import { createPublicClient } from "@/lib/supabase/public"
  * the form still saves leads (the result then says "we'll send your estimate").
  */
 
-export const ESTIMATOR_CACHE_TAG = "estimator"
+export const ESTIMATOR_CACHE_TAG = PUBLIC_CACHE_TAGS.estimator
 
 export type City = { id: string; name: string; slug: string }
 export type Area = { id: string; cityId: string; name: string }

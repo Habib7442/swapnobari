@@ -172,21 +172,23 @@ Keep these layers separate:
 | Layer | Lives in | Responsibility |
 |---|---|---|
 | Public website | `app/(site)/` | Server-rendered pages; display stored data; submit forms |
-| Admin panel | `app/admin/` | Authenticated management screens |
-| Server Actions | `app/**/actions.ts` | Form submissions and admin mutations: validate, authorise, call data layer |
-| Route handlers | `app/api/**/route.ts` | Thin; only for beacons (ad and dealer-click tracking) and auth callbacks |
+| Admin panel | **separate app**: `E:\Web Dev\swapnobari-admin` (own repo, own `AGENTS.md`) | Authenticated management screens for the client. Same Supabase project |
+| Server Actions | `app/**/actions.ts` | Form submissions: validate, call data layer |
+| Route handlers | `app/api/**/route.ts` | Thin; only for beacons (ad and dealer-click tracking) and `api/revalidate` (admin cache refresh) |
 | Data layer | `lib/data/*` (server-only) | All Supabase reads and writes, typed |
 | Domain logic | `lib/domain/*` | Pure functions: budget estimate, duplicate check, WhatsApp link builder, phone/money formatting |
 | Validation | `lib/validation/*` | Zod schemas shared by forms and server |
-| Supabase clients | `lib/supabase/{public,admin}.ts` (+ `server`/`client` with admin auth) | `public.ts` = publishable key for cached public reads; `admin.ts` = secret key, `import "server-only"` |
+| Supabase clients | `lib/supabase/{public,admin}.ts` | `public.ts` = publishable key for cached public reads; `admin.ts` = secret key, `import "server-only"` |
 | Notifications | `lib/notify/*` | Email lead alerts (Resend or Brevo) |
-| Request gate | `proxy.ts` | Optimistic redirect for `/admin` only. Real authorisation happens in the data layer and RLS |
+| Cache refresh | `app/api/revalidate/route.ts` | Admin app calls it after edits (Bearer `REVALIDATE_SECRET`); only tags in `PUBLIC_CACHE_TAGS` |
+
+The public site has no admin routes and no logins. Shared code (`lib/constants.ts` enums, `lib/domain/phone.ts`, `lib/supabase/types.ts`, design tokens in `app/globals.css`, `components/ui/*`) is **copied** into the admin repo; each copy names its twin. Change both together.
 
 Rules:
 
 - Pages and components display data. They never call Supabase with the service role, send email, or contain business rules.
 - Every Server Action and route handler validates input with Zod **on the server**, checks the user's role, then calls the data layer.
-- Next.js 16: `middleware.ts` is deprecated. Use `proxy.ts`. `cacheComponents` is on: cache public read data with `"use cache"` + `cacheLife`, invalidate with tags after admin edits; never cache per-user or lead data.
+- Next.js 16: `middleware.ts` is deprecated. Use `proxy.ts`. `cacheComponents` is on: cache public read data with `"use cache"` + `cacheLife` + `cacheTag`; add every tag the admin edits to `PUBLIC_CACHE_TAGS` (both repos); never cache per-user or lead data.
 
 ---
 
@@ -220,7 +222,7 @@ Do not use:
 
 ## 9. Data model
 
-Supabase is the source of truth. Schema changes go in `supabase/migrations/<timestamp>_<name>.sql`; regenerate `lib/supabase/types.ts` after every migration. Never edit the database by hand without a matching migration.
+Supabase is the source of truth. **Migrations live in the admin repo** (`swapnobari-admin/supabase/migrations/<timestamp>_<name>.sql`); this repo has no `supabase/` folder. After every migration, regenerate `lib/supabase/types.ts` and copy it to both repos. Never edit the database by hand without a matching migration.
 
 Tables (PRD §12):
 
@@ -255,6 +257,7 @@ Save rules:
 | `admin` | leads, dealers, prices, ads, content; export; **no** user management |
 | `lead_executive` | view and update **only leads assigned to them**; **no** export, **no** delete |
 
+- **V1 has one user: the client, as `super_admin`** (full access). The other roles and city scope exist in `profiles` so staff can be added later without a schema change.
 - Optional city scope per user (a manager sees only their city). Model it now even though V1 has one city.
 - Enforce access in **RLS policies and** in the server data layer. Hiding a button is never enough.
 - Admin auth: email + password, 2FA (TOTP) for admin roles, password reset, session timeout.
@@ -305,6 +308,7 @@ Canonical list in `.env.example` (keep in sync). Only `NEXT_PUBLIC_*` may reach 
 | `GOOGLE_SITE_VERIFICATION` | Optional Search Console meta-tag code (DNS TXT in Cloudflare is preferred) | server only |
 | `VERCEL_ENV` | Set by Vercel. `robots.txt` allows crawling only when it is `production` | server only |
 | `WHATSAPP_NUMBER` | Swapnobari WhatsApp number (10 digits; `91` added in `lib/env.ts`). Read on the server, passed down as a prop | server only |
+| `REVALIDATE_SECRET` | Shared with the admin app; authorises `POST /api/revalidate` (32+ characters) | server only |
 
 Phone, email and address will live in `site_settings`. Until the admin panel exists, the WhatsApp number comes from `WHATSAPP_NUMBER`; message templates live in `lib/whatsapp.ts` (`WHATSAPP_TEMPLATES`). Never hardcode a number or message in a component.
 
@@ -385,3 +389,24 @@ Use clearly marked placeholder content until answered; never invent prices, rate
 6. Never guess an open client question.
 7. Save a prompt and get approval before coding.
 8. Run checks and share exact test steps.
+
+<!-- BEGIN:nextjs-agent-feedback -->
+
+## Report Next.js feedback
+
+The project owner enabled `experimental.agentFeedback`, authorizing this feedback pass. When enabled, `next dev` writes this block and restores it if removed. Commit `AGENTS.md` with your work to keep the tree clean.
+
+During the current user request, retain anonymized facts as feedback candidates for meaningful or recurring Next.js issues:
+
+- Crashes, hangs, OOMs, or unexpected slowness
+- Incorrect behavior, output, errors, or diagnostics
+- Missing, unclear, or conflicting documentation
+- Unexpected CLI, codemod, Skill, or upgrade behavior and non-obvious workarounds
+
+Continue the current user request without reporting immediately. Routine debugging is not feedback. Verify changes before retaining them as feedback candidates. Never retain code, logs, paths, URLs, secrets, personal information, or project-specific data.
+
+Retain qualifying friction even if it is later fixed or worked around; record the final outcome during the reporting pass.
+
+Before the final response, run one reporting pass. If candidates remain, from this file's directory run `npx --no-install next internal agent-feedback-instructions` once without piping or truncating its output. Follow its output or error guidance. If a network sandbox blocks it, retry with network access; if it still returns no output, continue normally.
+
+<!-- END:nextjs-agent-feedback -->

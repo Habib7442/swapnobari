@@ -1,4 +1,5 @@
-// Database types. Hand-written to match the first migration; regenerate after every migration:
+// Database types. Hand-written to match the migrations, which live in the swapnobari-admin repo.
+// Keep identical in both repos; regenerate after every migration (from swapnobari-admin):
 //   npx supabase gen types typescript --linked > lib/supabase/types.ts
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
@@ -11,6 +12,8 @@ type Table<Row, Insert, Relationships extends unknown[] = []> = {
 }
 
 type LocationStatus = "active" | "coming_soon"
+type AdminRole = "super_admin" | "admin" | "lead_executive"
+type AuthAttemptKind = "password" | "mfa"
 
 export type Database = {
   public: {
@@ -171,9 +174,57 @@ export type Database = {
           updated_at?: string
         }
       >
+      profiles: Table<
+        {
+          id: string
+          full_name: string | null
+          role: AdminRole
+          city_id: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        },
+        {
+          id: string
+          full_name?: string | null
+          role: AdminRole
+          city_id?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      >
+      activity_log: Table<
+        {
+          id: string
+          actor_id: string | null
+          action: string
+          entity_type: string | null
+          entity_id: string | null
+          details: Json
+          created_at: string
+        },
+        {
+          id?: string
+          actor_id?: string | null
+          action: string
+          entity_type?: string | null
+          entity_id?: string | null
+          details?: Json
+          created_at?: string
+        }
+      >
+      auth_attempts: Table<
+        { id: string; kind: AuthAttemptKind; subject_hash: string; succeeded: boolean; created_at: string },
+        { id?: string; kind: AuthAttemptKind; subject_hash: string; succeeded: boolean; created_at?: string }
+      >
     }
     Views: { [_ in never]: never }
-    Functions: { [_ in never]: never }
+    Functions: {
+      admin_role: { Args: Record<string, never>; Returns: string | null }
+      is_admin: { Args: Record<string, never>; Returns: boolean }
+      is_super_admin: { Args: Record<string, never>; Returns: boolean }
+    }
     Enums: { [_ in never]: never }
     CompositeTypes: { [_ in never]: never }
   }
