@@ -593,6 +593,12 @@ export type Database = {
       admin_role: { Args: never; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      replace_budget_stages: { Args: { stages: Json }; Returns: number }
+      replace_package_features: {
+        Args: { features: Json; target_package_id: string }
+        Returns: number
+      }
+      save_budget_rates: { Args: { changes: Json }; Returns: number }
     }
     Enums: {
       [_ in never]: never

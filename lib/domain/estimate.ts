@@ -1,3 +1,4 @@
+// Twin of swapnobari-admin/lib/domain/estimate.ts: keep in sync.
 /**
  * Construction cost estimate (pure, no I/O).
  * total = built-up area per floor × floors × rate(package); shown as a ± range, never one number.
