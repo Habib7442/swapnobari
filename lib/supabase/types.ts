@@ -818,6 +818,7 @@ export type Database = {
           id: string
           is_enabled: boolean
           name: string
+          price_unit: string | null
           slug: string
           sort: number
           updated_at: string
@@ -828,6 +829,7 @@ export type Database = {
           id?: string
           is_enabled?: boolean
           name: string
+          price_unit?: string | null
           slug: string
           sort?: number
           updated_at?: string
@@ -838,11 +840,142 @@ export type Database = {
           id?: string
           is_enabled?: boolean
           name?: string
+          price_unit?: string | null
           slug?: string
           sort?: number
           updated_at?: string
         }
         Relationships: []
+      }
+      price_history: {
+        Row: {
+          brand_id: string
+          category_id: string
+          changed_at: string
+          changed_by: string | null
+          city_id: string
+          id: string
+          kind: string
+          new_price: number | null
+          old_price: number | null
+          unit: string
+        }
+        Insert: {
+          brand_id: string
+          category_id: string
+          changed_at?: string
+          changed_by?: string | null
+          city_id: string
+          id?: string
+          kind: string
+          new_price?: number | null
+          old_price?: number | null
+          unit: string
+        }
+        Update: {
+          brand_id?: string
+          category_id?: string
+          changed_at?: string
+          changed_by?: string | null
+          city_id?: string
+          id?: string
+          kind?: string
+          new_price?: number | null
+          old_price?: number | null
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_history_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "price_history_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "material_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "price_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "price_history_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prices: {
+        Row: {
+          brand_id: string
+          category_id: string
+          city_id: string
+          id: string
+          price: number
+          unit: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          brand_id: string
+          category_id: string
+          city_id: string
+          id?: string
+          price: number
+          unit: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          brand_id?: string
+          category_id?: string
+          city_id?: string
+          id?: string
+          price?: number
+          unit?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prices_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prices_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "material_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prices_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prices_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -936,8 +1069,16 @@ export type Database = {
     }
     Functions: {
       admin_role: { Args: never; Returns: string }
+      confirm_prices: {
+        Args: { brand_ids: string[]; target_city: string }
+        Returns: number
+      }
       is_admin: { Args: never; Returns: boolean }
       is_dealer_approved: { Args: { target_id: string }; Returns: boolean }
+      is_price_public: {
+        Args: { target_brand: string; target_city: string }
+        Returns: boolean
+      }
       is_super_admin: { Args: never; Returns: boolean }
       replace_budget_stages: { Args: { stages: Json }; Returns: number }
       replace_package_features: {
@@ -946,6 +1087,10 @@ export type Database = {
       }
       save_budget_rates: { Args: { changes: Json }; Returns: number }
       save_dealer: { Args: { dealer: Json }; Returns: string }
+      save_prices: {
+        Args: { changes: Json; target_city: string }
+        Returns: Json
+      }
       set_dealer_status: {
         Args: {
           expected_status: string

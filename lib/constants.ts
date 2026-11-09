@@ -63,6 +63,7 @@ export const PUBLIC_CACHE_TAGS = {
   estimator: "estimator",
   materials: "materials",
   dealers: "dealers",
+  prices: "prices",
 } as const
 export type PublicCacheTag = (typeof PUBLIC_CACHE_TAGS)[keyof typeof PUBLIC_CACHE_TAGS]
 
