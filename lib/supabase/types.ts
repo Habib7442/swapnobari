@@ -332,6 +332,263 @@ export type Database = {
           },
         ]
       }
+      dealer_brands: {
+        Row: {
+          brand_id: string
+          dealer_id: string
+        }
+        Insert: {
+          brand_id: string
+          dealer_id: string
+        }
+        Update: {
+          brand_id?: string
+          dealer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_brands_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_brands_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_contact_events: {
+        Row: {
+          area_id: string | null
+          category_id: string | null
+          created_at: string
+          dealer_id: string
+          id: string
+          kind: string
+        }
+        Insert: {
+          area_id?: string | null
+          category_id?: string | null
+          created_at?: string
+          dealer_id: string
+          id?: string
+          kind: string
+        }
+        Update: {
+          area_id?: string | null
+          category_id?: string | null
+          created_at?: string
+          dealer_id?: string
+          id?: string
+          kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_contact_events_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_contact_events_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "material_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_contact_events_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_materials: {
+        Row: {
+          category_id: string
+          dealer_id: string
+        }
+        Insert: {
+          category_id: string
+          dealer_id: string
+        }
+        Update: {
+          category_id?: string
+          dealer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_materials_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "material_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_materials_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_service_areas: {
+        Row: {
+          area_id: string
+          dealer_id: string
+        }
+        Insert: {
+          area_id: string
+          dealer_id: string
+        }
+        Update: {
+          area_id?: string
+          dealer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_service_areas_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_service_areas_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealers: {
+        Row: {
+          address: string
+          admin_note: string | null
+          area_id: string
+          business_name: string
+          city_id: string
+          created_at: string
+          description: string | null
+          email: string | null
+          gst_number: string | null
+          id: string
+          is_paid_listing: boolean
+          is_verified: boolean
+          mobile: string
+          owner_name: string
+          photo_path: string | null
+          pin: string | null
+          placement: string
+          placement_ends_on: string | null
+          placement_starts_on: string | null
+          plan: string | null
+          plan_expiry: string | null
+          slug: string
+          source: string
+          status: string
+          status_changed_at: string
+          status_changed_by: string | null
+          status_reason: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          address: string
+          admin_note?: string | null
+          area_id: string
+          business_name: string
+          city_id: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          gst_number?: string | null
+          id?: string
+          is_paid_listing?: boolean
+          is_verified?: boolean
+          mobile: string
+          owner_name: string
+          photo_path?: string | null
+          pin?: string | null
+          placement?: string
+          placement_ends_on?: string | null
+          placement_starts_on?: string | null
+          plan?: string | null
+          plan_expiry?: string | null
+          slug: string
+          source?: string
+          status?: string
+          status_changed_at?: string
+          status_changed_by?: string | null
+          status_reason?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string
+          admin_note?: string | null
+          area_id?: string
+          business_name?: string
+          city_id?: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          gst_number?: string | null
+          id?: string
+          is_paid_listing?: boolean
+          is_verified?: boolean
+          mobile?: string
+          owner_name?: string
+          photo_path?: string | null
+          pin?: string | null
+          placement?: string
+          placement_ends_on?: string | null
+          placement_starts_on?: string | null
+          plan?: string | null
+          plan_expiry?: string | null
+          slug?: string
+          source?: string
+          status?: string
+          status_changed_at?: string
+          status_changed_by?: string | null
+          status_reason?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealers_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealers_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealers_status_changed_by_fkey"
+            columns: ["status_changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_notes: {
         Row: {
           author_id: string | null
@@ -427,6 +684,7 @@ export type Database = {
           city_id: string | null
           consent: boolean
           created_at: string
+          dealer_id: string | null
           details: Json
           device: string | null
           duplicate_of: string | null
@@ -458,6 +716,7 @@ export type Database = {
           city_id?: string | null
           consent: boolean
           created_at?: string
+          dealer_id?: string | null
           details?: Json
           device?: string | null
           duplicate_of?: string | null
@@ -489,6 +748,7 @@ export type Database = {
           city_id?: string | null
           consent?: boolean
           created_at?: string
+          dealer_id?: string | null
           details?: Json
           device?: string | null
           duplicate_of?: string | null
@@ -526,6 +786,13 @@ export type Database = {
             columns: ["city_id"]
             isOneToOne: false
             referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
             referencedColumns: ["id"]
           },
           {
@@ -670,6 +937,7 @@ export type Database = {
     Functions: {
       admin_role: { Args: never; Returns: string }
       is_admin: { Args: never; Returns: boolean }
+      is_dealer_approved: { Args: { target_id: string }; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
       replace_budget_stages: { Args: { stages: Json }; Returns: number }
       replace_package_features: {
@@ -677,6 +945,16 @@ export type Database = {
         Returns: number
       }
       save_budget_rates: { Args: { changes: Json }; Returns: number }
+      save_dealer: { Args: { dealer: Json }; Returns: string }
+      set_dealer_status: {
+        Args: {
+          expected_status: string
+          new_status: string
+          reason: string
+          target_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

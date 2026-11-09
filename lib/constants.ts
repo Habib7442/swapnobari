@@ -62,6 +62,7 @@ export type LocationStatus = (typeof LOCATION_STATUSES)[number]
 export const PUBLIC_CACHE_TAGS = {
   estimator: "estimator",
   materials: "materials",
+  dealers: "dealers",
 } as const
 export type PublicCacheTag = (typeof PUBLIC_CACHE_TAGS)[keyof typeof PUBLIC_CACHE_TAGS]
 
@@ -82,6 +83,14 @@ export const MATERIAL_ICON_KEYS = [
   "boxes",
 ] as const
 export type MaterialIconKey = (typeof MATERIAL_ICON_KEYS)[number]
+
+/** Dealer listing status. Only approved dealers are visible on the website (public AGENTS.md §4). */
+export const DEALER_STATUSES = ["pending", "approved", "rejected"] as const
+export type DealerStatus = (typeof DEALER_STATUSES)[number]
+
+/** Featured = the client's pick; Sponsored = paid, always labelled "Sponsored". Live between its dates. */
+export const DEALER_PLACEMENTS = ["none", "featured", "sponsored"] as const
+export type DealerPlacement = (typeof DEALER_PLACEMENTS)[number]
 
 /** Shown when the server fails (AGENTS.md §12). */
 export const GENERIC_ERROR = "Something went wrong. Please try again or WhatsApp us."
