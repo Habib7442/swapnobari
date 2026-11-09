@@ -49,6 +49,13 @@ export const RATE_LIMIT = {
 export const DEFAULT_DUPLICATE_WINDOW_DAYS = 30
 
 /**
+ * States, cities and areas. Hidden = off the website, kept for old leads.
+ * Twin of LOCATION_STATUSES in swapnobari-admin/lib/constants.ts: keep in sync.
+ */
+export const LOCATION_STATUSES = ["active", "coming_soon", "hidden"] as const
+export type LocationStatus = (typeof LOCATION_STATUSES)[number]
+
+/**
  * Cache tags the admin app may refresh via POST /api/revalidate.
  * Twin of PUBLIC_CACHE_TAGS in swapnobari-admin/lib/constants.ts: keep in sync.
  */

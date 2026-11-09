@@ -47,9 +47,10 @@ export async function getEstimatorData(): Promise<EstimatorData> {
 
   try {
     const supabase = createPublicClient()
-    const [cities, areas, packages, rates, features, stages, settings] = await Promise.all([
-      supabase.from("cities").select("id, name, slug, status").eq("status", "active").order("sort"),
-      supabase.from("areas").select("id, city_id, name").order("sort").order("name"),
+    const [states, cities, areas, packages, rates, features, stages, settings] = await Promise.all([
+      supabase.from("states").select("id").eq("status", "active"),
+      supabase.from("cities").select("id, state_id, name, slug, status").eq("status", "active").order("sort").order("name"),
+      supabase.from("areas").select("id, city_id, name").eq("status", "active").order("sort").order("name"),
       supabase.from("budget_packages").select("id, slug, name, tagline, sort").order("sort"),
       supabase.from("budget_rates").select("city_id, package_id, rate_per_sqft"),
       supabase.from("budget_package_features").select("package_id, label, value, sort").order("sort"),
@@ -57,8 +58,14 @@ export async function getEstimatorData(): Promise<EstimatorData> {
       supabase.from("site_settings").select("key, value").in("key", ["estimate_range_percent", "estimate_disclaimer"]),
     ])
 
-    const firstError = [cities, areas, packages, rates, features, stages, settings].find((r) => r.error)?.error
+    const firstError = [states, cities, areas, packages, rates, features, stages, settings].find((r) => r.error)?.error
     if (firstError) throw firstError
+
+    // A city shows only while it and its state are active (admin Locations can hide either);
+    // an area only while its city shows.
+    const activeStates = new Set((states.data ?? []).map((s) => s.id))
+    const cityRows = (cities.data ?? []).filter((c) => activeStates.has(c.state_id))
+    const shownCities = new Set(cityRows.map((c) => c.id))
 
     const packageRows: Package[] = (packages.data ?? []).map((p) => ({
       id: p.id,
@@ -90,8 +97,10 @@ export async function getEstimatorData(): Promise<EstimatorData> {
 
     cacheLife("minutes")
     return {
-      cities: (cities.data ?? []).map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
-      areas: (areas.data ?? []).map((a) => ({ id: a.id, cityId: a.city_id, name: a.name })),
+      cities: cityRows.map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
+      areas: (areas.data ?? [])
+        .filter((a) => shownCities.has(a.city_id))
+        .map((a) => ({ id: a.id, cityId: a.city_id, name: a.name })),
       packages: packageRows,
       ratesByCity,
       features: (features.data ?? []).flatMap((f) => {
