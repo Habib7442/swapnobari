@@ -1,231 +1,727 @@
-// Database types. Hand-written to match the migrations, which live in the swapnobari-admin repo.
-// Keep identical in both repos; regenerate after every migration (from swapnobari-admin):
-//   npx supabase gen types typescript --linked > lib/supabase/types.ts
+// Generated from the Supabase project. Do not edit by hand. Identical in swapnobari and swapnobari-admin.
+// Regenerate after every migration (from swapnobari-admin), then copy to the website:
+//   npx supabase gen types typescript --remote --schema public > lib/supabase/types.ts
 
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
-
-type Table<Row, Insert, Relationships extends unknown[] = []> = {
-  Row: Row
-  Insert: Insert
-  Update: Partial<Insert>
-  Relationships: Relationships
-}
-
-type LocationStatus = "active" | "coming_soon"
-type AdminRole = "super_admin" | "admin" | "lead_executive"
-type AuthAttemptKind = "password" | "mfa"
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.18"
+  }
   public: {
     Tables: {
-      states: Table<
-        { id: string; name: string; slug: string; status: LocationStatus; sort: number; created_at: string },
-        { id?: string; name: string; slug: string; status?: LocationStatus; sort?: number; created_at?: string }
-      >
-      cities: Table<
-        {
-          id: string
-          state_id: string
-          name: string
-          slug: string
-          status: LocationStatus
-          sort: number
+      activity_log: {
+        Row: {
+          action: string
+          actor_id: string | null
           created_at: string
-        },
-        {
-          id?: string
-          state_id: string
-          name: string
-          slug: string
-          status?: LocationStatus
-          sort?: number
-          created_at?: string
-        }
-      >
-      areas: Table<
-        {
+          details: Json
+          entity_id: string | null
+          entity_type: string | null
           id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      areas: {
+        Row: {
           city_id: string
+          created_at: string
+          id: string
           name: string
-          slug: string
           pin: string | null
-          status: LocationStatus
-          sort: number
-          created_at: string
-        },
-        {
-          id?: string
-          city_id: string
-          name: string
           slug: string
+          sort: number
+          status: string
+        }
+        Insert: {
+          city_id: string
+          created_at?: string
+          id?: string
+          name: string
           pin?: string | null
-          status?: LocationStatus
-          sort?: number
-          created_at?: string
-        }
-      >
-      budget_packages: Table<
-        {
-          id: string
           slug: string
-          name: string
-          tagline: string | null
-          sort: number
-          is_active: boolean
+          sort?: number
+          status?: string
+        }
+        Update: {
+          city_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          pin?: string | null
+          slug?: string
+          sort?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "areas_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auth_attempts: {
+        Row: {
           created_at: string
-        },
-        {
-          id?: string
-          slug: string
-          name: string
-          tagline?: string | null
-          sort?: number
-          is_active?: boolean
-          created_at?: string
-        }
-      >
-      budget_rates: Table<
-        {
           id: string
-          city_id: string
-          package_id: string
-          rate_per_sqft: number
-          is_active: boolean
-          updated_at: string
-        },
-        {
+          kind: string
+          subject_hash: string
+          succeeded: boolean
+        }
+        Insert: {
+          created_at?: string
           id?: string
+          kind: string
+          subject_hash: string
+          succeeded: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          subject_hash?: string
+          succeeded?: boolean
+        }
+        Relationships: []
+      }
+      budget_package_features: {
+        Row: {
+          id: string
+          label: string
+          package_id: string
+          sort: number
+          value: string
+        }
+        Insert: {
+          id?: string
+          label: string
+          package_id: string
+          sort?: number
+          value: string
+        }
+        Update: {
+          id?: string
+          label?: string
+          package_id?: string
+          sort?: number
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_package_features_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "budget_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      budget_packages: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort: number
+          tagline: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort?: number
+          tagline?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort?: number
+          tagline?: string | null
+        }
+        Relationships: []
+      }
+      budget_rates: {
+        Row: {
           city_id: string
+          id: string
+          is_active: boolean
           package_id: string
           rate_per_sqft: number
+          updated_at: string
+        }
+        Insert: {
+          city_id: string
+          id?: string
           is_active?: boolean
+          package_id: string
+          rate_per_sqft: number
           updated_at?: string
         }
-      >
-      budget_package_features: Table<
-        { id: string; package_id: string; label: string; value: string; sort: number },
-        { id?: string; package_id: string; label: string; value: string; sort?: number }
-      >
-      budget_stages: Table<
-        { id: string; name: string; percent: number; ground_floor_only: boolean; sort: number },
-        { id?: string; name: string; percent: number; ground_floor_only?: boolean; sort?: number }
-      >
-      site_settings: Table<
-        { key: string; value: Json; is_public: boolean; updated_at: string },
-        { key: string; value: Json; is_public?: boolean; updated_at?: string }
-      >
-      leads: Table<
-        {
+        Update: {
+          city_id?: string
+          id?: string
+          is_active?: boolean
+          package_id?: string
+          rate_per_sqft?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_rates_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "budget_rates_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "budget_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      budget_stages: {
+        Row: {
+          ground_floor_only: boolean
           id: string
-          ref_code: string
-          type: string
-          status: string
           name: string
-          mobile: string
-          city_id: string | null
+          percent: number
+          sort: number
+        }
+        Insert: {
+          ground_floor_only?: boolean
+          id?: string
+          name: string
+          percent: number
+          sort?: number
+        }
+        Update: {
+          ground_floor_only?: boolean
+          id?: string
+          name?: string
+          percent?: number
+          sort?: number
+        }
+        Relationships: []
+      }
+      cities: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          sort: number
+          state_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          sort?: number
+          state_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort?: number
+          state_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cities_state_id_fkey"
+            columns: ["state_id"]
+            isOneToOne: false
+            referencedRelation: "states"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_notes: {
+        Row: {
+          author_id: string | null
+          body: string
+          created_at: string
+          follow_up_at: string | null
+          id: string
+          lead_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          body: string
+          created_at?: string
+          follow_up_at?: string | null
+          id?: string
+          lead_id: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          follow_up_at?: string | null
+          id?: string
+          lead_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_notes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          from_status: string
+          id: string
+          lead_id: string
+          reason: string | null
+          to_status: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          from_status: string
+          id?: string
+          lead_id: string
+          reason?: string | null
+          to_status: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string
+          id?: string
+          lead_id?: string
+          reason?: string | null
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_status_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_status_history_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
           area_id: string | null
           area_other: string | null
-          details: Json
-          source_page: string | null
-          source_button: string | null
-          utm_source: string | null
-          utm_medium: string | null
-          utm_campaign: string | null
-          utm_term: string | null
-          utm_content: string | null
-          device: string | null
-          consent: boolean
-          is_duplicate: boolean
-          duplicate_of: string | null
-          result_token: string | null
-          ip_hash: string | null
           assigned_to: string | null
-          follow_up_at: string | null
+          city_id: string | null
+          consent: boolean
           created_at: string
-          updated_at: string
-        },
-        {
-          id?: string
-          ref_code?: string
-          type: string
-          status?: string
-          name: string
+          details: Json
+          device: string | null
+          duplicate_of: string | null
+          follow_up_at: string | null
+          id: string
+          ip_hash: string | null
+          is_duplicate: boolean
           mobile: string
-          city_id?: string | null
+          name: string
+          ref_code: string
+          result_token: string | null
+          source_button: string | null
+          source_page: string | null
+          status: string
+          status_reason: string | null
+          type: string
+          updated_at: string
+          updated_by: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
           area_id?: string | null
           area_other?: string | null
-          details?: Json
-          source_page?: string | null
-          source_button?: string | null
-          utm_source?: string | null
-          utm_medium?: string | null
-          utm_campaign?: string | null
-          utm_term?: string | null
-          utm_content?: string | null
-          device?: string | null
-          consent: boolean
-          is_duplicate?: boolean
-          duplicate_of?: string | null
-          result_token?: string | null
-          ip_hash?: string | null
           assigned_to?: string | null
-          follow_up_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      >
-      profiles: Table<
-        {
-          id: string
-          full_name: string | null
-          role: AdminRole
-          city_id: string | null
-          is_active: boolean
-          created_at: string
-          updated_at: string
-        },
-        {
-          id: string
-          full_name?: string | null
-          role: AdminRole
           city_id?: string | null
-          is_active?: boolean
+          consent: boolean
           created_at?: string
+          details?: Json
+          device?: string | null
+          duplicate_of?: string | null
+          follow_up_at?: string | null
+          id?: string
+          ip_hash?: string | null
+          is_duplicate?: boolean
+          mobile: string
+          name: string
+          ref_code?: string
+          result_token?: string | null
+          source_button?: string | null
+          source_page?: string | null
+          status?: string
+          status_reason?: string | null
+          type: string
+          updated_at?: string
+          updated_by?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          area_id?: string | null
+          area_other?: string | null
+          assigned_to?: string | null
+          city_id?: string | null
+          consent?: boolean
+          created_at?: string
+          details?: Json
+          device?: string | null
+          duplicate_of?: string | null
+          follow_up_at?: string | null
+          id?: string
+          ip_hash?: string | null
+          is_duplicate?: boolean
+          mobile?: string
+          name?: string
+          ref_code?: string
+          result_token?: string | null
+          source_button?: string | null
+          source_page?: string | null
+          status?: string
+          status_reason?: string | null
+          type?: string
+          updated_at?: string
+          updated_by?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_duplicate_of_fkey"
+            columns: ["duplicate_of"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          city_id: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          is_active: boolean
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          city_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          is_active?: boolean
+          role: string
           updated_at?: string
         }
-      >
-      activity_log: Table<
-        {
-          id: string
-          actor_id: string | null
-          action: string
-          entity_type: string | null
-          entity_id: string | null
-          details: Json
-          created_at: string
-        },
-        {
-          id?: string
-          actor_id?: string | null
-          action: string
-          entity_type?: string | null
-          entity_id?: string | null
-          details?: Json
+        Update: {
+          city_id?: string | null
           created_at?: string
+          full_name?: string | null
+          id?: string
+          is_active?: boolean
+          role?: string
+          updated_at?: string
         }
-      >
-      auth_attempts: Table<
-        { id: string; kind: AuthAttemptKind; subject_hash: string; succeeded: boolean; created_at: string },
-        { id?: string; kind: AuthAttemptKind; subject_hash: string; succeeded: boolean; created_at?: string }
-      >
+        Relationships: [
+          {
+            foreignKeyName: "profiles_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          is_public: boolean
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          is_public?: boolean
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          is_public?: boolean
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      states: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          sort: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          sort?: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort?: number
+          status?: string
+        }
+        Relationships: []
+      }
     }
-    Views: { [_ in never]: never }
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
-      admin_role: { Args: Record<string, never>; Returns: string | null }
-      is_admin: { Args: Record<string, never>; Returns: boolean }
-      is_super_admin: { Args: Record<string, never>; Returns: boolean }
+      admin_role: { Args: never; Returns: string }
+      is_admin: { Args: never; Returns: boolean }
+      is_super_admin: { Args: never; Returns: boolean }
     }
-    Enums: { [_ in never]: never }
-    CompositeTypes: { [_ in never]: never }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
