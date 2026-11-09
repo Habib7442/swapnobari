@@ -57,6 +57,189 @@ export type Database = {
           },
         ]
       }
+      ad_cities: {
+        Row: {
+          ad_id: string
+          city_id: string
+        }
+        Insert: {
+          ad_id: string
+          city_id: string
+        }
+        Update: {
+          ad_id?: string
+          city_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_cities_ad_id_fkey"
+            columns: ["ad_id"]
+            isOneToOne: false
+            referencedRelation: "ads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_cities_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_events: {
+        Row: {
+          ad_id: string
+          city_id: string | null
+          created_at: string
+          device: string | null
+          id: string
+          kind: string
+        }
+        Insert: {
+          ad_id: string
+          city_id?: string | null
+          created_at?: string
+          device?: string | null
+          id?: string
+          kind: string
+        }
+        Update: {
+          ad_id?: string
+          city_id?: string | null
+          created_at?: string
+          device?: string | null
+          id?: string
+          kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_events_ad_id_fkey"
+            columns: ["ad_id"]
+            isOneToOne: false
+            referencedRelation: "ads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_events_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_slots: {
+        Row: {
+          created_at: string
+          desktop_height: number
+          desktop_width: number
+          id: string
+          is_active: boolean
+          key: string
+          mobile_height: number
+          mobile_width: number
+          name: string
+          page: string
+          sort: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          desktop_height: number
+          desktop_width: number
+          id?: string
+          is_active?: boolean
+          key: string
+          mobile_height: number
+          mobile_width: number
+          name: string
+          page: string
+          sort?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          desktop_height?: number
+          desktop_width?: number
+          id?: string
+          is_active?: boolean
+          key?: string
+          mobile_height?: number
+          mobile_width?: number
+          name?: string
+          page?: string
+          sort?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ads: {
+        Row: {
+          advertiser_name: string
+          created_at: string
+          created_by: string | null
+          desktop_image_path: string
+          ends_on: string | null
+          id: string
+          label: string
+          link_url: string | null
+          mobile_image_path: string
+          priority: number
+          slot_id: string
+          starts_on: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          advertiser_name: string
+          created_at?: string
+          created_by?: string | null
+          desktop_image_path: string
+          ends_on?: string | null
+          id?: string
+          label?: string
+          link_url?: string | null
+          mobile_image_path: string
+          priority?: number
+          slot_id: string
+          starts_on: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          advertiser_name?: string
+          created_at?: string
+          created_by?: string | null
+          desktop_image_path?: string
+          ends_on?: string | null
+          id?: string
+          label?: string
+          link_url?: string | null
+          mobile_image_path?: string
+          priority?: number
+          slot_id?: string
+          starts_on?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ads_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ads_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "ad_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       areas: {
         Row: {
           city_id: string
@@ -1068,11 +1251,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ad_report: {
+        Args: { from_date: string; to_date: string }
+        Returns: {
+          ad_id: string
+          advertiser_name: string
+          clicks: number
+          ends_on: string
+          impressions: number
+          label: string
+          slot_key: string
+          starts_on: string
+          status: string
+        }[]
+      }
       admin_role: { Args: never; Returns: string }
       confirm_prices: {
         Args: { brand_ids: string[]; target_city: string }
         Returns: number
       }
+      is_ad_public: { Args: { target_id: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_dealer_approved: { Args: { target_id: string }; Returns: boolean }
       is_price_public: {
@@ -1080,16 +1278,22 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: never; Returns: boolean }
+      ist_today: { Args: never; Returns: string }
       replace_budget_stages: { Args: { stages: Json }; Returns: number }
       replace_package_features: {
         Args: { features: Json; target_package_id: string }
         Returns: number
       }
+      save_ad: { Args: { ad: Json }; Returns: string }
       save_budget_rates: { Args: { changes: Json }; Returns: number }
       save_dealer: { Args: { dealer: Json }; Returns: string }
       save_prices: {
         Args: { changes: Json; target_city: string }
         Returns: Json
+      }
+      set_ad_status: {
+        Args: { new_status: string; target_id: string }
+        Returns: string
       }
       set_dealer_status: {
         Args: {

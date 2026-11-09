@@ -295,10 +295,10 @@ States: hover darkens 1 step and lifts `shadow-sm`; pressed darkens 2 steps; foc
 
 | Slot ID | Page | Desktop size | Mobile size | Notes |
 |---|---|---|---|---|
-| `home_banner` | Home, after services | 1200 × 160 | 360 × 120 | Full width in container |
-| `home_materials_side` | Home, materials section | 300 × 400 | Hidden or 360 × 120 below results | |
-| `materials_top` | Building Materials | 1200 × 160 | 360 × 120 | |
-| `materials_side` | Building Materials | 300 × 600 | 360 × 120 between results | |
+| `home_banner` | Home, after services | 16:9, any size | 16:9, any size | Full width in container |
+| `home_materials_side` | Home, materials section | 16:9, any size | 16:9, any size (below results) | |
+| `materials_top` | Building Materials | 16:9, any size | 16:9, any size | |
+| `materials_side` | Building Materials | 16:9, any size | 16:9, any size (between results) | |
 
 - Admin uploads separate desktop and mobile images (PNG/JPG/WebP, max 300 KB).
 - Safe zone: keep text 24 px away from edges; the label sits top-right, so avoid placing key content there.

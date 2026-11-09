@@ -64,6 +64,7 @@ export const PUBLIC_CACHE_TAGS = {
   materials: "materials",
   dealers: "dealers",
   prices: "prices",
+  ads: "ads",
 } as const
 export type PublicCacheTag = (typeof PUBLIC_CACHE_TAGS)[keyof typeof PUBLIC_CACHE_TAGS]
 
@@ -92,6 +93,14 @@ export type DealerStatus = (typeof DEALER_STATUSES)[number]
 /** Featured = the client's pick; Sponsored = paid, always labelled "Sponsored". Live between its dates. */
 export const DEALER_PLACEMENTS = ["none", "featured", "sponsored"] as const
 export type DealerPlacement = (typeof DEALER_PLACEMENTS)[number]
+
+/** Ad slots (DESIGN.md §9), seeded as ad_slots rows; matches the ad_slots.key check. */
+export const AD_SLOT_KEYS = ["home_banner", "home_materials_side", "materials_top", "materials_side"] as const
+export type AdSlotKey = (typeof AD_SLOT_KEYS)[number]
+
+/** Every paid banner carries one of these labels (public AGENTS.md §4). */
+export const AD_LABELS = ["advertisement", "sponsored"] as const
+export type AdLabel = (typeof AD_LABELS)[number]
 
 /** Shown when the server fails (AGENTS.md §12). */
 export const GENERIC_ERROR = "Something went wrong. Please try again or WhatsApp us."
