@@ -61,8 +61,27 @@ export type LocationStatus = (typeof LOCATION_STATUSES)[number]
  */
 export const PUBLIC_CACHE_TAGS = {
   estimator: "estimator",
+  materials: "materials",
 } as const
 export type PublicCacheTag = (typeof PUBLIC_CACHE_TAGS)[keyof typeof PUBLIC_CACHE_TAGS]
+
+/**
+ * Material category icons: keys of a fixed Lucide list (map in lib/material-icons.ts).
+ * Twin of MATERIAL_ICON_KEYS in swapnobari-admin/lib/constants.ts; matches the material_categories.icon check.
+ */
+export const MATERIAL_ICON_KEYS = [
+  "bag",
+  "bars",
+  "bricks",
+  "stone",
+  "tiles",
+  "electrical",
+  "plumbing",
+  "paint",
+  "tools",
+  "boxes",
+] as const
+export type MaterialIconKey = (typeof MATERIAL_ICON_KEYS)[number]
 
 /** Shown when the server fails (AGENTS.md §12). */
 export const GENERIC_ERROR = "Something went wrong. Please try again or WhatsApp us."

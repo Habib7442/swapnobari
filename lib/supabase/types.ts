@@ -1,6 +1,7 @@
 // Generated from the Supabase project. Do not edit by hand. Identical in swapnobari and swapnobari-admin.
 // Regenerate after every migration (from swapnobari-admin), then copy to the website:
 //   npx supabase gen types typescript --remote --schema public > lib/supabase/types.ts
+//   (in PowerShell, pipe through `Out-File -Encoding utf8` instead: `>` writes UTF-16)
 
 export type Json =
   | string
@@ -120,6 +121,50 @@ export type Database = {
           succeeded?: boolean
         }
         Relationships: []
+      }
+      brands: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          logo_path: string | null
+          name: string
+          slug: string
+          sort: number
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_path?: string | null
+          name: string
+          slug: string
+          sort?: number
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_path?: string | null
+          name?: string
+          slug?: string
+          sort?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brands_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "material_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       budget_package_features: {
         Row: {
@@ -498,6 +543,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      material_categories: {
+        Row: {
+          created_at: string
+          icon: string
+          id: string
+          is_enabled: boolean
+          name: string
+          slug: string
+          sort: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string
+          id?: string
+          is_enabled?: boolean
+          name: string
+          slug: string
+          sort?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string
+          id?: string
+          is_enabled?: boolean
+          name?: string
+          slug?: string
+          sort?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
