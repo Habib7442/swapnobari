@@ -1,8 +1,9 @@
+import type { ReactElement } from "react"
 import { WhatsAppIcon } from "@/components/icons/whatsapp"
 import { whatsappMessage, whatsappUrl } from "@/lib/whatsapp"
 
 /** Desktop only (AGENTS.md §6): on mobile the hero and the drawer carry WhatsApp. */
-export function FloatingWhatsApp({ whatsappNumber }: { whatsappNumber: string }) {
+export function FloatingWhatsApp({ whatsappNumber }: { whatsappNumber: string }): ReactElement {
   return (
     <a
       href={whatsappUrl(whatsappNumber, whatsappMessage("general"))}

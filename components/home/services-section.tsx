@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Section } from "@/components/site/section"
@@ -8,7 +9,7 @@ import { cn } from "@/lib/utils"
 
 const ZOOM = "transition-transform duration-200 ease-brand group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
 
-export function ServicesSection() {
+export function ServicesSection(): ReactElement {
   const whatsappNumber = getWhatsAppNumber()
 
   return (

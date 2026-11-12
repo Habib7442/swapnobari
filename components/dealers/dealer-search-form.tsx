@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type ReactElement } from "react"
 import { ChevronDown, Search } from "lucide-react"
 import type { SearchOption, SearchOptions } from "@/lib/data/dealers"
 import type { DealerFilter } from "@/lib/domain/dealers"
@@ -42,7 +42,7 @@ function SelectField({ label, name, allLabel, options, value, onChange }: Select
 }
 
 /** A plain GET form to /building-materials, so results are shareable and it works without JS. */
-export function DealerSearchForm({ options, initial = {} }: { options: SearchOptions; initial?: DealerFilter }) {
+export function DealerSearchForm({ options, initial = {} }: { options: SearchOptions; initial?: DealerFilter }): ReactElement {
   const [material, setMaterial] = useState(initial.material ?? "")
   const [city, setCity] = useState(initial.city ?? "")
   const [brand, setBrand] = useState(initial.brand ?? "")

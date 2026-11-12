@@ -1,8 +1,9 @@
+import type { ReactElement } from "react"
 import Link from "next/link"
 import { QUICK_FLOW, actionLinkProps } from "@/lib/content/home"
 import { getWhatsAppNumber } from "@/lib/env"
 
-export function QuickFlow() {
+export function QuickFlow(): ReactElement {
   const whatsappNumber = getWhatsAppNumber()
 
   return (

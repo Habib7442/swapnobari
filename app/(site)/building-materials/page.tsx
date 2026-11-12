@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, type ReactElement } from "react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -11,7 +11,7 @@ const route = getRoute("/building-materials")
 
 export const metadata: Metadata = pageMetadata("/building-materials")
 
-export default function BuildingMaterialsPage({ searchParams }: PageProps<"/building-materials">) {
+export default function BuildingMaterialsPage({ searchParams }: PageProps<"/building-materials">): ReactElement {
   return (
     <>
       <JsonLd data={[webPageJsonLd(route.path, route.title, route.description)]} />

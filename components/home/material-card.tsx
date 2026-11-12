@@ -1,4 +1,4 @@
-import { createElement } from "react"
+import { createElement, type ReactElement } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import type { MaterialCategory } from "@/lib/data/materials"
@@ -10,7 +10,7 @@ type MaterialCardProps = { material: MaterialCategory; sellerCount: number }
 const TILE = "flex h-full min-h-[76px] items-center gap-3 rounded-xl border border-gray-200 bg-white p-4"
 
 /** A category tile. Links to the seller search only when approved sellers exist. */
-export function MaterialCard({ material, sellerCount }: MaterialCardProps) {
+export function MaterialCard({ material, sellerCount }: MaterialCardProps): ReactElement {
   const live = sellerCount > 0
   const icon = (
     <span

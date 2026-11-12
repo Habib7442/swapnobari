@@ -21,7 +21,7 @@ Turn the boxed step list into an open, colour-coded five-step process: filled st
 
 1. **Tokens:** the five step colours are already tokens (`step-coral`, `step-blue`, `step-green`, `step-amber`, `step-violet`), so nothing new is added to `globals.css`. The component maps each step to its token classes; no hex values in the component.
 2. **Copy and step data unchanged.** The steps stay in the component (they are not in `lib/content/home.ts` today); only the colour field changes from a tint string to a `{ fill, ring }` class pair.
-3. **Contrast conflict (needs your call, see below).** White 16 px bold numbers on the DESIGN §3.3 fills measure: coral 3.41, blue 3.68, green 3.18, **amber 2.15**, violet 4.23. DESIGN §3.5/§11 want 4.5:1 for 16 px text. **Default in this prompt: white numbers as specified** (DESIGN §3.3 and your brief), since the number is reinforced by the `<ol>` position and the title. Alternative if you prefer: navy-900 number on amber only (7.66:1).
+3. **Contrast (decided: tinted fill).** DESIGN §3.5/§11 want 4.5:1 for 16 px text. On the solid DESIGN §3.3 fills no single number colour passes all five: white measures coral 3.41, blue 3.68, green 3.18, amber 2.15, violet 4.23; navy-900 measures 4.82, 4.48, 5.17, 7.66, 3.89. So every circle uses a **15% tint of its step colour** (`bg-step-*/15`, composited on gray-50) with a **solid 2 px ring of the step colour** and a **navy-900 number**: coral 12.99, blue 13.00, green 13.16, amber 13.78, violet 12.81. Same treatment on all five steps; no per-step exception.
 4. **Description colour:** gray-500 on the gray-50 background measures 4.43:1, just under 4.5, and DESIGN §3.1 says gray-500 is "on white only". **Default: gray-600** (7.04:1), same size and weight. Say if you want gray-500 exactly.
 5. **Connector visibility:** a 1 px dashed gray-200 line on gray-50 is very faint by design; the gray-500 chevron carries the direction. Built as specified.
 6. **Fade-up without hiding content:** a small client wrapper (`components/site/reveal-list.tsx`) renders the steps visible on the server. After hydration, only if the list is still below the viewport and the user has not asked for reduced motion, it marks the list "pending" (steps at opacity 0) and plays `animate-fade-up` with a 60 ms stagger when 20% of it enters view, once. No JS or reduced motion = steps simply visible. Duration uses the existing `fade-up` keyframes (600 ms, matching the hero).
@@ -47,11 +47,11 @@ No new dependencies. No data, RLS or migration changes.
 
 **Step (`li`):** `relative flex gap-4 md:flex-col md:gap-4`, text left-aligned.
 
-- Circle: `size-11` (44 px), `rounded-full`, `bg-step-*`, `ring-4 ring-step-*/15`, white number `text-base font-bold`, `aria-hidden="true"` (the list already gives the position; the visible number stays for sighted users).
+- Circle: `size-11` (44 px), `rounded-full`, `bg-step-*/15`, `ring-2 ring-step-*`, navy-900 number `text-base font-bold` (decision 3), `aria-hidden="true"` (the list already gives the position; the visible number stays for sighted users).
 - Title: `h3`, 16 px, 600, navy-700, `leading-snug`.
 - Description: 14 px, `leading-relaxed`, gray-600 (decision 4), `line-clamp-3`, `mt-1`.
 
-**Desktop connector (lg+, not after step 5):** `aria-hidden` absolutely positioned row, `top-[14px]`, from `left-14` (circle 44 + ring 4 + 8 px gap) to `-right-4` (ends 4 px before the next circle's ring across the 24 px gap), `hidden lg:flex items-center`: a `flex-1 border-t border-dashed border-gray-200` line, then `ChevronRight` 16 px gray-500 (`-ml-1`, `shrink-0`).
+**Desktop connector (lg+, not after step 5):** `aria-hidden` absolutely positioned row, `top-[14px]`, from `left-14` (circle 44 + ring 2 + 10 px gap) to `-right-4` (ends 4 px before the next circle's ring across the 24 px gap), `hidden lg:flex items-center`: a `flex-1 border-t border-dashed border-gray-200` line, then `ChevronRight` 16 px gray-500 (`-ml-1`, `shrink-0`).
 
 **Mobile timeline (< md, not after step 5):** `aria-hidden` 2 px line `bg-gray-200`, `left-[21px]`, from `top-[52px]` (below circle + ring + 4 px) to `bottom-[-24px]` (stops 4 px above the next ring across the 32 px gap), `md:hidden`.
 
@@ -64,7 +64,8 @@ Static content only. No inputs, data or routes.
 ## Acceptance criteria
 
 - [ ] No white card; steps sit on gray-50.
-- [ ] 44 px filled circles in the five step colours with a 4 px 15% ring of the same colour; white bold numbers (or the amber alternative if chosen).
+- [ ] 44 px circles with a 15% tint of each step colour and a solid 2 px ring of that colour; navy-900 bold numbers.
+- [ ] Every step number measures at least 4.5:1 against its circle (computed on gray-50), all five steps checked.
 - [ ] Title 16/600 navy-700; description 14 px, max 3 lines; all left-aligned under the circle (md+) or beside it (mobile).
 - [ ] lg+: five equal columns; four dashed connectors with a chevron, from one circle's right to just before the next.
 - [ ] md: 3 + 2 grid, no connectors.

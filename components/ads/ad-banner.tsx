@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import type { AdSlotKey } from "@/lib/constants"
 import { AdBannerClient } from "@/components/ads/ad-banner-client"
 import { getSlotAds, type SlotAds } from "@/lib/data/ads"
@@ -18,7 +19,7 @@ async function loadAds(slotKey: AdSlotKey, fallbackSlotKey?: AdSlotKey): Promise
 }
 
 /** An admin-managed banner. Paused slot: nothing. No live banner: the grey "Advertise here" box. */
-export async function AdBanner({ slotKey, fallbackSlotKey }: AdBannerProps) {
+export async function AdBanner({ slotKey, fallbackSlotKey }: AdBannerProps): Promise<ReactElement | null> {
   const { active, ads } = await loadAds(slotKey, fallbackSlotKey)
   if (!active) return null
 

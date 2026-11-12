@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import Image from "next/image"
 import { BadgeCheck, MapPin } from "lucide-react"
 import { DealerGetPrice } from "@/components/dealers/dealer-get-price"
@@ -13,7 +14,7 @@ type DealerCardProps = {
 
 const pill = "inline-flex h-6 items-center gap-1 rounded-full px-2 text-xs font-medium whitespace-nowrap"
 
-export function DealerCard({ dealer, whatsappNumber, materialSlug }: DealerCardProps) {
+export function DealerCard({ dealer, whatsappNumber, materialSlug }: DealerCardProps): ReactElement {
   const location = [dealer.area, dealer.city].filter(Boolean).join(", ")
   const searched = dealer.materials.find((material) => material.slug === materialSlug)
   const only = dealer.materials.length === 1 ? dealer.materials[0] : undefined

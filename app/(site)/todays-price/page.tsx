@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import type { Metadata } from "next"
 import { WhatsAppIcon } from "@/components/icons/whatsapp"
 import { PriceList, formatPriceDate } from "@/components/prices/price-list"
@@ -14,7 +15,7 @@ const route = getRoute("/todays-price")
 
 export const metadata: Metadata = pageMetadata("/todays-price")
 
-export default async function TodaysPricePage() {
+export default async function TodaysPricePage(): Promise<ReactElement> {
   const { rows, failed } = await getPublicPrices()
   const latest = rows.reduce<string | null>(
     (newest, row) => (!newest || row.updatedAt > newest ? row.updatedAt : newest),

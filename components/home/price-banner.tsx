@@ -1,9 +1,10 @@
+import type { ReactElement } from "react"
 import Link from "next/link"
 import { ArrowRight, IndianRupee } from "lucide-react"
 import { formatPriceDate } from "@/components/prices/price-list"
 
 /** Link card to Today's Price. Shows only the last-updated date, never a price. */
-export function PriceBanner({ latest }: { latest: string | null }) {
+export function PriceBanner({ latest }: { latest: string | null }): ReactElement {
   return (
     <div className="flex flex-col gap-4 rounded-2xl bg-navy-50 p-5 md:flex-row md:items-center md:gap-5 md:p-6">
       <div className="flex min-w-0 flex-1 items-start gap-4 md:items-center">

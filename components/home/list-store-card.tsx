@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import Link from "next/link"
 import { ArrowRight, Store } from "lucide-react"
 import { getWhatsAppNumber } from "@/lib/env"
@@ -9,7 +10,7 @@ const BUTTON =
   "inline-flex h-11 items-center justify-center gap-1.5 rounded-[10px] border border-navy-700 bg-white px-5 text-sm font-semibold whitespace-nowrap text-navy-700 transition-colors hover:bg-navy-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
 
 /** Fills the rest of the Featured Sellers row with an invitation to dealers. Never a fake seller. */
-export function ListStoreCard({ className }: { className?: string }) {
+export function ListStoreCard({ className }: { className?: string }): ReactElement {
   const pageLive = getRoute("/list-your-store").live
   const label = (
     <>

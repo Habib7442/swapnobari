@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { AdBanner } from "@/components/ads/ad-banner"
@@ -21,7 +22,7 @@ import { whatsappMessage, whatsappUrl } from "@/lib/whatsapp"
 /** One row at lg (4 columns). The "List your store" card fills a slot only when there are fewer. */
 const FEATURED_COUNT = 4
 
-export async function MaterialsSection() {
+export async function MaterialsSection(): Promise<ReactElement> {
   const [materials, { dealers, failed }, options, prices] = await Promise.all([
     getEnabledMaterials(),
     getPublicDealers(),

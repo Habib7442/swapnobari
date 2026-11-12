@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, type ReactElement } from "react"
 import Image from "next/image"
 import type { AdEventKind, AdSlotKey } from "@/lib/constants"
 import type { LiveAd } from "@/lib/data/ads"
@@ -20,7 +20,7 @@ function sendAdEvent(adId: string, kind: AdEventKind): void {
 
 type AdBannerClientProps = { slotKey: AdSlotKey; ads: LiveAd[] }
 
-export function AdBannerClient({ slotKey, ads }: AdBannerClientProps) {
+export function AdBannerClient({ slotKey, ads }: AdBannerClientProps): ReactElement | null {
   const pickedId = useAdStore((state) => state.picks[slotKey])
   const choose = useAdStore((state) => state.choose)
   const markSeen = useAdStore((state) => state.markSeen)
@@ -42,7 +42,8 @@ export function AdBannerClient({ slotKey, ads }: AdBannerClientProps) {
     if (!node || !adId || pickedId !== adId) return
     const observer = new IntersectionObserver(
       (entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return
+        // The first callback reports any overlap, even under the threshold, so check the ratio too.
+        if (!entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5)) return
         observer.disconnect()
         if (markSeen(adId)) sendAdEvent(adId, "impression")
       },

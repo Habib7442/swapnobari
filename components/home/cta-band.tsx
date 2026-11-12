@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import Link from "next/link"
 import { ArrowRight, House } from "lucide-react"
 import { WhatsAppIcon } from "@/components/icons/whatsapp"
@@ -9,7 +10,7 @@ const BUTTON =
   "h-12 items-center justify-center gap-2 rounded-[10px] px-6 font-semibold whitespace-nowrap text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
 const ESTIMATE = `${BUTTON} bg-orange-500 hover:bg-orange-600`
 
-export function CtaBand() {
+export function CtaBand(): ReactElement {
   const estimateLabel = (
     <>
       Get Free Estimate

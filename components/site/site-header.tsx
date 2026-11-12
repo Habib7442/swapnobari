@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactElement } from "react"
 import { ArrowRight } from "lucide-react"
 import { Logo } from "@/components/site/logo"
 import { MobileNav } from "@/components/site/mobile-nav"
@@ -14,7 +14,7 @@ const SCROLL_THRESHOLD = 20
 /** Desktop shows the first four links inline; the rest sit under "More". The mobile drawer shows all. */
 const INLINE_LINKS = 4
 
-export function SiteHeader({ whatsappNumber, nav }: { whatsappNumber: string; nav: NavItem[] }) {
+export function SiteHeader({ whatsappNumber, nav }: { whatsappNumber: string; nav: NavItem[] }): ReactElement {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import type { PriceRow } from "@/lib/data/prices"
 
 const rupees = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 })
@@ -17,7 +18,7 @@ function price(row: PriceRow): string {
 }
 
 /** A table from 768px up; each row becomes a card below that. */
-export function PriceList({ rows }: { rows: PriceRow[] }) {
+export function PriceList({ rows }: { rows: PriceRow[] }): ReactElement {
   return (
     <>
       <div className="hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-brand-sm md:block">

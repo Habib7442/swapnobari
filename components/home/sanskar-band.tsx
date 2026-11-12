@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import Image from "next/image";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { SANSKAR_BAND_IMAGE, SANSKAR_STAGES } from "@/lib/content/home";
@@ -20,7 +20,7 @@ const imageVar = { "--sanskar-img": IMAGE_WIDTH } as CSSProperties;
 const CONTENT_OFFSET =
   "lg:[--gutter:32px] xl:[--gutter:48px] lg:pl-[max(0px,calc(var(--sanskar-img)_+_32px_-_max(0px,(100vw_-_1440px)_/_2)_-_var(--gutter)))]";
 
-export function SanskarBand() {
+export function SanskarBand(): ReactElement {
   const image = SANSKAR_BAND_IMAGE;
 
   return (

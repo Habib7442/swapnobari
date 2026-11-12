@@ -1,3 +1,4 @@
+import type { ReactElement } from "react"
 import { AdBanner } from "@/components/ads/ad-banner"
 import { DealerCard } from "@/components/dealers/dealer-card"
 import { DealerSearchForm } from "@/components/dealers/dealer-search-form"
@@ -13,9 +14,15 @@ import { whatsappMessage, whatsappUrl } from "@/lib/whatsapp"
 type DealerResultsProps = { searchParams: Promise<Record<string, string | string[] | undefined>> }
 
 /** Reads the URL, so it renders inside <Suspense>; the dealer list itself is cached. */
-export async function DealerResults({ searchParams }: DealerResultsProps) {
-  const filter = parseDealerSearch(await searchParams)
+export async function DealerResults({ searchParams }: DealerResultsProps): Promise<ReactElement> {
+  const parsed = parseDealerSearch(await searchParams)
   const [{ dealers, failed }, options] = await Promise.all([getPublicDealers(), getSearchOptions()])
+  // A brand of another material is dropped, as the form does when the material changes.
+  const brandFits =
+    !parsed.brand ||
+    !parsed.material ||
+    options.brands.some((option) => option.slug === parsed.brand && option.materialSlug === parsed.material)
+  const filter = brandFits ? parsed : { ...parsed, brand: undefined }
   const results = filterDealers(dealers, filter)
   const whatsappNumber = getWhatsAppNumber()
   const askHref = whatsappUrl(whatsappNumber, whatsappMessage("materials", { area: siteConfig.address.locality }))

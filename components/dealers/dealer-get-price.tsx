@@ -1,9 +1,11 @@
 "use client"
 
+import type { ReactElement } from "react"
+
 type DealerGetPriceProps = { href: string; dealerId: string; categoryId?: string }
 
 /** Opens WhatsApp to Swapnobari and logs the click against the dealer. */
-export function DealerGetPrice({ href, dealerId, categoryId }: DealerGetPriceProps) {
+export function DealerGetPrice({ href, dealerId, categoryId }: DealerGetPriceProps): ReactElement {
   function logClick(): void {
     const body = JSON.stringify({ dealerId, categoryId })
     navigator.sendBeacon("/api/track/dealer", new Blob([body], { type: "application/json" }))

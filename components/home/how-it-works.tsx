@@ -4,32 +4,33 @@ import { Section } from "@/components/site/section"
 import { SectionHeader } from "@/components/site/section-header"
 import { cn } from "@/lib/utils"
 
-// Step colours from DESIGN.md §3.3 (tokens in app/globals.css). The number keeps colour from being the only signal.
+// Step colours from DESIGN.md §3.3 (tokens in app/globals.css): tinted fill + solid ring, so the navy-900
+// number clears 4.5:1 on every step. The number keeps colour from being the only signal.
 const steps = [
   {
     title: "Share Requirement",
     text: "Tell us about your plot, budget and plans.",
-    circle: "bg-step-coral ring-step-coral/15",
+    circle: "bg-step-coral/15 ring-step-coral",
   },
   {
     title: "Consultation",
     text: "Talk to our team about design, Vastu and cost.",
-    circle: "bg-step-blue ring-step-blue/15",
+    circle: "bg-step-blue/15 ring-step-blue",
   },
   {
     title: "Budget & Plan",
     text: "Get a clear estimate and a Vastu-aligned floor plan.",
-    circle: "bg-step-green ring-step-green/15",
+    circle: "bg-step-green/15 ring-step-green",
   },
   {
     title: "Construction",
     text: "We build with quality materials and regular updates.",
-    circle: "bg-step-amber ring-step-amber/15",
+    circle: "bg-step-amber/15 ring-step-amber",
   },
   {
     title: "Handover",
     text: "Your finished home, ready for Griha Pravesh.",
-    circle: "bg-step-violet ring-step-violet/15",
+    circle: "bg-step-violet/15 ring-step-violet",
   },
 ]
 
@@ -65,7 +66,7 @@ export function HowItWorks() {
             <span
               aria-hidden="true"
               className={cn(
-                "relative inline-flex size-11 shrink-0 items-center justify-center rounded-full text-base font-bold text-white ring-4",
+                "relative inline-flex size-11 shrink-0 items-center justify-center rounded-full text-base font-bold text-navy-900 ring-2",
                 step.circle
               )}
             >
