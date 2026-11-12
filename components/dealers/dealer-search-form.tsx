@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ReactElement } from "react"
+import { useState, useSyncExternalStore, type ReactElement } from "react"
 import { ChevronDown, Search } from "lucide-react"
 import type { SearchOption, SearchOptions } from "@/lib/data/dealers"
 import type { DealerFilter } from "@/lib/domain/dealers"
@@ -41,12 +41,16 @@ function SelectField({ label, name, allLabel, options, value, onChange }: Select
   )
 }
 
+const noopSubscribe = (): (() => void) => () => {}
+
 /** A plain GET form to /building-materials, so results are shareable and it works without JS. */
 export function DealerSearchForm({ options, initial = {} }: { options: SearchOptions; initial?: DealerFilter }): ReactElement {
   const [material, setMaterial] = useState(initial.material ?? "")
   const [city, setCity] = useState(initial.city ?? "")
   const [brand, setBrand] = useState(initial.brand ?? "")
-  const brands = options.brands.filter((option) => !material || option.materialSlug === material)
+  // Server HTML lists every brand, so a no-JS visitor can change Material and still pick its brand.
+  const hydrated = useSyncExternalStore(noopSubscribe, () => true, () => false)
+  const brands = options.brands.filter((option) => !hydrated || !material || option.materialSlug === material)
 
   function changeMaterial(next: string): void {
     setMaterial(next)

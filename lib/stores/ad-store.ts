@@ -10,6 +10,8 @@ type AdStore = {
   choose: (slot: AdSlotKey, adIds: string[]) => void
   /** Records an impression. False if this banner was already counted. */
   markSeen: (adId: string) => boolean
+  /** Undoes `markSeen` when the impression could not be sent, so it can be retried. */
+  unmarkSeen: (adId: string) => void
 }
 
 /**
@@ -30,5 +32,10 @@ export const useAdStore = create<AdStore>()((set, get) => ({
     if (get().seen[adId]) return false
     set((state) => ({ seen: { ...state.seen, [adId]: true } }))
     return true
+  },
+  unmarkSeen: (adId) => {
+    set((state) => ({
+      seen: Object.fromEntries(Object.entries(state.seen).filter(([id]) => id !== adId)),
+    }))
   },
 }))

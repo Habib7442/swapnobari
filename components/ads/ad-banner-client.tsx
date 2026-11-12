@@ -13,9 +13,14 @@ function currentDevice(): "mobile" | "tablet" | "desktop" {
   return window.innerWidth < 1024 ? "tablet" : "desktop"
 }
 
-function sendAdEvent(adId: string, kind: AdEventKind): void {
+/** True when the browser queued the beacon. */
+function sendAdEvent(adId: string, kind: AdEventKind): boolean {
   const body = JSON.stringify({ adId, kind, device: currentDevice() })
-  navigator.sendBeacon("/api/track/ad", new Blob([body], { type: "application/json" }))
+  try {
+    return navigator.sendBeacon("/api/track/ad", new Blob([body], { type: "application/json" }))
+  } catch {
+    return false
+  }
 }
 
 type AdBannerClientProps = { slotKey: AdSlotKey; ads: LiveAd[] }
@@ -24,6 +29,7 @@ export function AdBannerClient({ slotKey, ads }: AdBannerClientProps): ReactElem
   const pickedId = useAdStore((state) => state.picks[slotKey])
   const choose = useAdStore((state) => state.choose)
   const markSeen = useAdStore((state) => state.markSeen)
+  const unmarkSeen = useAdStore((state) => state.unmarkSeen)
   const frame = useRef<HTMLDivElement>(null)
 
   const ad = ads.find((candidate) => candidate.id === pickedId) ?? ads[0]
@@ -44,14 +50,16 @@ export function AdBannerClient({ slotKey, ads }: AdBannerClientProps): ReactElem
       (entries) => {
         // The first callback reports any overlap, even under the threshold, so check the ratio too.
         if (!entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5)) return
-        observer.disconnect()
-        if (markSeen(adId)) sendAdEvent(adId, "impression")
+        if (!markSeen(adId)) return observer.disconnect()
+        if (sendAdEvent(adId, "impression")) return observer.disconnect()
+        // Not queued: forget it and keep observing, so the next time it comes into view retries.
+        unmarkSeen(adId)
       },
       { threshold: 0.5 }
     )
     observer.observe(node)
     return () => observer.disconnect()
-  }, [adId, pickedId, markSeen])
+  }, [adId, pickedId, markSeen, unmarkSeen])
 
   if (!ad) return null
   const label = LABEL_TEXT[ad.label]

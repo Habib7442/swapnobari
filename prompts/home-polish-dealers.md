@@ -31,7 +31,7 @@ Make the home page look finished and professional, show the admin's approved dea
 5a. **Every enabled material gets its own card (user request).** Cards replace the chips and come from `material_categories`, so a category enabled in admin appears by itself and a disabled one (Sand & Stone, Tiles, Electrical, Plumbing today) stays hidden, as AGENTS §4 requires.
 6. **Building Materials goes live** with search, because "View All Sellers" needs a destination. It joins the menu, and the temporary Today's Price menu item moves to a link on that page and in the footer.
 7. **Building Materials omits the `materials_top` banner for now.** A large banner above the search would repeat the problem just reported. The side rail keeps `materials_side`.
-8. **No-results and Get Price stay on WhatsApp in this slice.** The lead forms (PRD §7.2, AGENTS §4 no-results lead) are the next slice. The no-results wording is exact.
+8. **Get Price stays on WhatsApp.** No results must offer a material lead form (AGENTS §4), built in `prompts/material-enquiry.md`. Until it ships, the no-results panel keeps its WhatsApp button. The no-results wording is exact.
 9. **No dealer profile page yet.** Cards don't link anywhere except Get Price.
 10. Sponsored and Featured count only inside their date range, checked in Indian time. Sponsored first, then Featured, then by name. Sponsored always shows the "Sponsored" label.
 
@@ -118,6 +118,7 @@ No migrations. Reads use existing `anon` grants and policies, including `brands`
 - [ ] Service cards are colourful, wider, and every button stays on one line at 1024 and 1440 px
 - [ ] Search by material, city and brand works and is shareable by URL
 - [ ] No results shows the exact wording
+- [ ] No results leads to a material enquiry form that creates a `material_price` lead (see `prompts/material-enquiry.md`)
 - [ ] Get Price opens WhatsApp with the dealer's name and adds a row to `dealer_contact_events`
 - [ ] No dealer number appears in the page HTML
 - [ ] The banner shows only in the sellers section, with its label; no standalone banner section
