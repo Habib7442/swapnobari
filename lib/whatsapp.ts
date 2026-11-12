@@ -11,8 +11,15 @@ export type WhatsAppTemplateKey =
   | "estimateRequested"
   | "consultation"
   | "vastu"
+  | "floorPlan"
+  | "azConstruction"
+  | "planReview"
+  | "sanskar"
+  | "advertise"
   | "materials"
   | "dealerPrice"
+  | "dealerEnquiry"
+  | "listStore"
 
 type TemplateVars = Record<string, string | number | undefined>
 
@@ -41,12 +48,29 @@ export const WHATSAPP_TEMPLATES: Record<WhatsAppTemplateKey, string> = {
   // Service enquiries (Build Your Home page, later).
   consultation: "Hi Swapnobari, I'd like to book a pre-construction consultation for my house.",
   vastu: "Hi Swapnobari, I'd like Vastu-aligned planning for my house.",
+  floorPlan: "Hi Swapnobari, I'd like a floor plan for my house.",
+  azConstruction: "Hi Swapnobari, I'd like to build my house with your complete construction service.",
+  planReview: "Hi Swapnobari, I'd like you to review my house plan or estimate.",
+  sanskar: "Hi Swapnobari, I'd like to know more about Shubh Nirman Sanskar for my house.",
+
+  // Empty ad slots.
+  advertise: "Hi Swapnobari, I'd like to advertise on your website.",
 
   // Building materials.
   materials: "Hi Swapnobari, I need cement / TMT prices from sellers near {area}.",
 
   // Dealer cards (PRD §7.2). Sent to the dealer's number, not Swapnobari's.
   dealerPrice: "Hi, I found you on Swapnobari. I need a price for {material} in {area}.",
+
+  // Dealer cards while contact goes through Swapnobari. Sent to Swapnobari's number.
+  dealerEnquiry: [
+    "Hi Swapnobari, I found {dealer} on your website and would like a price.",
+    "Material: {material}",
+    "Area: {area}",
+  ].join("\n"),
+
+  // "List your store" card while the List Your Store page is not live.
+  listStore: "Hi Swapnobari, I sell building materials and would like to list my store on your website.",
 }
 
 /** Fills a template. Lines whose placeholders are all empty are removed, so optional fields vanish cleanly. */

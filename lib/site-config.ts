@@ -33,10 +33,9 @@ export const mainNav: NavItem[] = [
   { label: "Contact", href: "/contact" },
 ]
 
-/** Desktop shows the first four inline; the rest sit under "More". The mobile drawer shows all. */
-export const primaryNav: NavItem[] = mainNav.slice(0, 4)
-export const moreNav: NavItem[] = mainNav.slice(4)
-
 export function phoneLink(): string {
   return `tel:${siteConfig.phone}`
 }
+
+/** False while `phone` is still the placeholder, so no Call button dials a dead number. */
+export const hasPhone: boolean = !/^\+910+$/.test(siteConfig.phone)

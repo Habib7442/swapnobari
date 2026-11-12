@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Fraunces, Inter } from "next/font/google"
+import { Fraunces, Inter, Playfair_Display } from "next/font/google"
 import { JsonLd } from "@/components/seo/json-ld"
 import { getWhatsAppNumber } from "@/lib/env"
 import { localBusinessJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/jsonld"
@@ -21,6 +21,14 @@ const fraunces = Fraunces({
   display: "swap",
 })
 
+// Shubh Nirman Sanskar band only (AGENTS.md §6).
+const playfair = Playfair_Display({
+  variable: "--font-sanskar-serif",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+})
+
 export const metadata: Metadata = defaultMetadata
 
 export const viewport: Viewport = {
@@ -35,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     // hydration. This only ignores those two elements' own attributes, not their children.
     <html
       lang="en-IN"
-      className={`${inter.variable} ${fraunces.variable} h-full`}
+      className={`${inter.variable} ${fraunces.variable} ${playfair.variable} h-full`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col" suppressHydrationWarning>

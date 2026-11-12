@@ -102,5 +102,10 @@ export type AdSlotKey = (typeof AD_SLOT_KEYS)[number]
 export const AD_LABELS = ["advertisement", "sponsored"] as const
 export type AdLabel = (typeof AD_LABELS)[number]
 
+/** ad_events.kind and ad_events.device checks. */
+export const AD_EVENT_KINDS = ["impression", "click"] as const
+export type AdEventKind = (typeof AD_EVENT_KINDS)[number]
+export const AD_DEVICES = ["mobile", "desktop", "tablet"] as const
+
 /** Shown when the server fails (AGENTS.md §12). */
 export const GENERIC_ERROR = "Something went wrong. Please try again or WhatsApp us."

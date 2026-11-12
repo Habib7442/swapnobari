@@ -6,12 +6,15 @@ import { Logo } from "@/components/site/logo"
 import { MobileNav } from "@/components/site/mobile-nav"
 import { NavLinks } from "@/components/site/nav-links"
 import { cn } from "@/lib/utils"
-import { mainNav, moreNav, primaryNav } from "@/lib/site-config"
+import type { NavItem } from "@/lib/site-config"
 import { whatsappMessage, whatsappUrl } from "@/lib/whatsapp"
 
 const SCROLL_THRESHOLD = 20
 
-export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
+/** Desktop shows the first four links inline; the rest sit under "More". The mobile drawer shows all. */
+const INLINE_LINKS = 4
+
+export function SiteHeader({ whatsappNumber, nav }: { whatsappNumber: string; nav: NavItem[] }) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
         <Logo />
 
         <nav aria-label="Main" className="hidden min-[1200px]:block">
-          <NavLinks items={primaryNav} more={moreNav} />
+          <NavLinks items={nav.slice(0, INLINE_LINKS)} more={nav.slice(INLINE_LINKS)} />
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
@@ -58,7 +61,7 @@ export function SiteHeader({ whatsappNumber }: { whatsappNumber: string }) {
             </span>
           </a>
           <div className="min-[1200px]:hidden">
-            <MobileNav items={mainNav} whatsappNumber={whatsappNumber} />
+            <MobileNav items={nav} whatsappNumber={whatsappNumber} />
           </div>
         </div>
       </div>

@@ -27,11 +27,19 @@
   --color-field: #f5f6f8;
   --color-error: #b42318;
   --color-success: #166534;
+  --color-step-coral: #e85d5d;
+  --color-step-blue: #3b82f6;
+  --color-step-green: #22a55b;
+  --color-step-amber: #f59e0b;
+  --color-step-violet: #8b5cf6;
   --color-sanskar-cream: #fff4e5;
   --color-sanskar-maroon: #8b1e1e;
   --color-sanskar-marigold: #f5a623;
   --color-sanskar-leaf: #4f7a28;
   --color-sanskar-brown: #5a3a1e;
+  /* DESIGN.md §3.4 status colours (twin: swapnobari-admin app/globals.css). */
+  --color-status-neutral: #374151;
+  --color-status-neutral-bg: #f3f4f6;
 
   --shadow-brand-sm: 0 1px 2px rgba(15, 31, 58, 0.06);
   --shadow-brand-md: 0 6px 18px rgba(15, 31, 58, 0.1);
@@ -68,6 +76,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
   --font-display: var(--font-display-serif);
+  --font-sanskar: var(--font-sanskar-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

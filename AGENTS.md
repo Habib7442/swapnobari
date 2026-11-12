@@ -202,6 +202,7 @@ Use:
 - **shadcn/ui** (`base-nova` on Base UI) + `lucide-react` + `cn` from `@/lib/utils`
 - **Supabase**: Postgres (Mumbai region), **Supabase Auth** for admin users, Storage for images and uploads, RLS on every table; `@supabase/ssr` for cookies
 - **Zod** for all validation
+- **Zustand** for shared client UI state only (no server data, no `persist`/`localStorage`)
 - **Resend or Brevo** for lead email alerts (to confirm)
 - **Cloudflare Turnstile** + rate limiting on public forms
 - **Vercel** hosting, Cloudflare DNS

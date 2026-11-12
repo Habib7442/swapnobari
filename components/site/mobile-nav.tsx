@@ -22,7 +22,7 @@ import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/com
 import { WhatsAppIcon } from "@/components/icons/whatsapp"
 import { Logo } from "@/components/site/logo"
 import { cn } from "@/lib/utils"
-import { phoneLink, type NavItem } from "@/lib/site-config"
+import { hasPhone, phoneLink, type NavItem } from "@/lib/site-config"
 import { whatsappMessage, whatsappUrl } from "@/lib/whatsapp"
 
 const ICONS: Record<string, LucideIcon> = {
@@ -106,14 +106,16 @@ export function MobileNav({ items, whatsappNumber }: MobileNavProps) {
         {/* Contact */}
         <div className="shrink-0 border-t border-hairline px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <p className="pb-3 text-[13px] text-slate-600 [@media(max-height:760px)]:hidden">Talk to us before you start.</p>
-          <div className="grid grid-cols-2 gap-2.5">
-            <a
-              href={phoneLink()}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-[10px] border border-gray-200 bg-white text-[15px] font-semibold text-navy-700 transition-colors hover:bg-cream-light"
-            >
-              <Phone aria-hidden="true" className="size-[18px]" />
-              Call
-            </a>
+          <div className={cn("grid gap-2.5", hasPhone && "grid-cols-2")}>
+            {hasPhone && (
+              <a
+                href={phoneLink()}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-[10px] border border-gray-200 bg-white text-[15px] font-semibold text-navy-700 transition-colors hover:bg-cream-light"
+              >
+                <Phone aria-hidden="true" className="size-[18px]" />
+                Call
+              </a>
+            )}
             <a
               href={whatsappUrl(whatsappNumber, whatsappMessage("general"))}
               target="_blank"

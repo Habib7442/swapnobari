@@ -108,7 +108,7 @@ export async function Hero() {
 
           <div className="mt-8 hidden animate-fade-up flex-wrap items-center gap-3 [animation-delay:240ms] md:flex">
             <Link
-              href="/build-your-home"
+              href="#services"
               className="group inline-flex h-[54px] items-center justify-center gap-3 rounded-full bg-orange-500 pr-2.5 pl-[26px] text-base font-semibold text-white transition duration-200 ease-brand hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-[0_12px_28px_rgba(242,107,29,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
             >
               Plan My Project

@@ -1,5 +1,5 @@
 import type { Metadata, MetadataRoute } from "next"
-import { siteConfig } from "@/lib/site-config"
+import { mainNav, siteConfig, type NavItem } from "@/lib/site-config"
 
 /** Canonical origin, no trailing slash. Apex domain (www redirects to it in Vercel). */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://swapnobari.in").replace(/\/+$/, "")
@@ -57,10 +57,10 @@ export const publicRoutes: PublicRoute[] = [
   {
     path: "/building-materials",
     title: "Cement & TMT Sellers Near You in Silchar",
-    description: "Find approved cement and TMT dealers in your area. Compare brands and call or WhatsApp sellers directly.",
+    description: "Find approved cement and TMT dealers in your area. Compare brands and get prices through Swapnobari.",
     changeFrequency: "weekly",
     priority: 0.8,
-    live: false,
+    live: true,
   },
   {
     path: "/todays-price",
@@ -68,7 +68,7 @@ export const publicRoutes: PublicRoute[] = [
     description: "Indicative cement and TMT prices by brand in Silchar, updated regularly. Get exact prices from sellers near you.",
     changeFrequency: "daily",
     priority: 0.8,
-    live: false,
+    live: true,
   },
   {
     path: "/shubh-nirman-sanskar",
@@ -128,6 +128,11 @@ export const publicRoutes: PublicRoute[] = [
     live: false,
   },
 ]
+
+/** Menu items whose page is live, so the menu never leads to a 404. */
+export function liveNav(): NavItem[] {
+  return mainNav.filter((item) => getRoute(item.href).live)
+}
 
 export function getRoute(path: string): PublicRoute {
   const route = publicRoutes.find((r) => r.path === path)

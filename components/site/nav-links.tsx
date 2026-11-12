@@ -36,40 +36,42 @@ export function NavLinks({ items, more }: NavLinksProps) {
       <Suspense fallback={<InlineLinks items={items} pathname="" />}>
         <ActiveInlineLinks items={items} />
       </Suspense>
-      <li>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={cn(
-              linkClass,
-              "group inline-flex items-center gap-1 outline-none focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 data-popup-open:text-orange-500"
-            )}
-          >
-            <Suspense fallback={null}>
-              <MoreActiveMarker more={more} />
-            </Suspense>
-            More
-            <ChevronDown
-              aria-hidden="true"
-              className="size-4 transition-transform duration-200 group-data-popup-open:rotate-180"
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            sideOffset={10}
-            className="w-44 rounded-xl border border-hairline bg-white p-1.5 shadow-brand-md ring-0"
-          >
-            {more.map((item) => (
-              <DropdownMenuItem
-                key={item.href}
-                render={<Link href={item.href} />}
-                className="h-10 rounded-lg px-3 text-[15px] font-medium text-navy-700 focus:bg-cream-light focus:text-orange-600"
-              >
-                {item.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </li>
+      {more.length > 0 && (
+        <li>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                linkClass,
+                "group inline-flex items-center gap-1 outline-none focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 data-popup-open:text-orange-500"
+              )}
+            >
+              <Suspense fallback={null}>
+                <MoreActiveMarker more={more} />
+              </Suspense>
+              More
+              <ChevronDown
+                aria-hidden="true"
+                className="size-4 transition-transform duration-200 group-data-popup-open:rotate-180"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              sideOffset={10}
+              className="w-44 rounded-xl border border-hairline bg-white p-1.5 shadow-brand-md ring-0"
+            >
+              {more.map((item) => (
+                <DropdownMenuItem
+                  key={item.href}
+                  render={<Link href={item.href} />}
+                  className="h-10 rounded-lg px-3 text-[15px] font-medium text-navy-700 focus:bg-cream-light focus:text-orange-600"
+                >
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </li>
+      )}
     </ul>
   )
 }

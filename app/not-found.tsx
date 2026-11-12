@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowRight, HardHat, House } from "lucide-react"
 import { SiteHeader } from "@/components/site/site-header"
 import { getWhatsAppNumber } from "@/lib/env"
+import { liveNav } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Coming soon",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="flex min-h-full flex-1 flex-col bg-cream-light">
-      <SiteHeader whatsappNumber={getWhatsAppNumber()} />
+      <SiteHeader whatsappNumber={getWhatsAppNumber()} nav={liveNav()} />
       <main className="relative isolate flex flex-1 items-center overflow-hidden">
         {/* Soft blueprint grid, fading out towards the edges. */}
         <div
